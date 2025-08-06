@@ -1,3 +1,49 @@
+console.log("🔍 DEBUG: app.js loaded");
+console.log("🔍 DEBUG: Supabase available?", typeof supabase !== 'undefined');
+
+// Test database immediately
+window.addEventListener('load', async function() {
+    console.log("🔍 DEBUG: Page loaded, testing database...");
+    
+    if (typeof supabase !== 'undefined') {
+        const { createClient } = supabase;
+        const sb = createClient('https://viresxwhyqcflmfoyxsf.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpcmVzeHdoeXFjZmxtZm95eHNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0MDU1MDMsImV4cCI6MjA2OTk4MTUwM30.MuR0PKP1Og3cF9wOjYbWGFQfo6rtsWvcoODgD1_boUQ');
+        
+        try {
+            const { data, error } = await sb.from('products').select('*');
+            console.log("🔍 DEBUG: Products query result:", { data, error });
+            
+            if (data && data.length > 0) {
+                console.log("✅ Database working, rendering products...");
+                
+                // Manual render for testing
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    mainContent.innerHTML = `
+                        <div class="text-center py-12">
+                            <h2 class="text-2xl font-bold mb-4">✅ Database Connected!</h2>
+                            <p class="mb-4">Found ${data.length} products</p>
+                            <div class="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                                ${data.slice(0, 3).map(p => `
+                                    <div class="bg-white p-4 rounded shadow">
+                                        <h3 class="font-bold">${p.name}</h3>
+                                        <p class="text-green-600">Rp ${p.price.toLocaleString()}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        } catch (err) {
+            console.error("🔍 DEBUG: Database test failed:", err);
+        }
+    } else {
+        console.error("🔍 DEBUG: Supabase library not found!");
+    }
+});
+    
+
 // --- Konfigurasi & Inisialisasi ---
 const { createClient } = supabase;
 const supabaseUrl = 'https://viresxwhyqcflmfoyxsf.supabase.co';
