@@ -13,9 +13,10 @@ let state = {
     sortBy: 'terbaru',
     cart: {},
     appliedVoucher: null,
-    settings: { qrisImageUrl: '', whatsappNumber: '' },
+    settings: { qrisImageUrl: '', whatsappNumber: '', promo_media_url: '', promo_media_type: '' },
     user: null,
-    isReady: false
+    isReady: false,
+    selectedProductId: null
 };
 
 // --- Elemen DOM Utama ---
@@ -23,16 +24,17 @@ const mainContent = document.getElementById('main-content');
 const cartBtn = document.getElementById('cart-btn');
 const cartCountEl = document.getElementById('cart-count');
 const floatingCartEl = document.getElementById('floating-cart');
+const promoPopup = document.getElementById('promo-popup');
 
 // --- Fungsi Helper ---
 const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
 
-async function uploadImage(file, path) {
+async function uploadFile(file, path) {
     if (!file) return null;
     const { data, error } = await sb.storage.from('images').upload(path, file, { upsert: true });
     if (error) {
-        console.error('Error uploading image:', error);
-        showToast(`Gagal mengunggah gambar: ${error.message}`, 'error');
+        console.error('Error uploading file:', error);
+        showToast(`Gagal mengunggah file: ${error.message}`, 'error');
         return null;
     }
     const { data: { publicUrl } } = sb.storage.from('images').getPublicUrl(path);
@@ -76,6 +78,7 @@ function render() {
         case 'admin': state.user ? renderAdminPanel() : renderLoginPage(); break;
         case 'login': renderLoginPage(); break;
         case 'checkout': renderCheckoutPage(); break;
+        case 'productDetail': renderProductDetailPage(); break;
     }
 }
 
@@ -105,12 +108,14 @@ function renderProductGrid() {
     if (displayedProducts.length === 0) {
         content += `<p class="text-center text-slate-500">Tidak ada produk yang cocok.</p>`;
     } else {
-        content += `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">${displayedProducts.map(p => `
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col relative">
-                ${!p.is_available ? `<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"><span class="text-white text-2xl font-bold transform -rotate-12 border-4 border-white p-2">STOK HABIS</span></div>` : ''}
-                <img src="${p.image_url || 'https://placehold.co/600x400'}" alt="${p.name}" class="w-full h-64 object-cover ${!p.is_available ? 'opacity-60' : ''}">
+        content += `<div class="flex flex-wrap justify-center gap-8">${displayedProducts.map(p => `
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col relative w-64">
+                <div class="product-card-link cursor-pointer" data-product-id="${p.id}">
+                    ${!p.is_available ? `<div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10"><span class="text-white text-2xl font-bold transform -rotate-12 border-4 border-white p-2">STOK HABIS</span></div>` : ''}
+                    <img src="${p.image_url || 'https://placehold.co/600x400'}" alt="${p.name}" class="w-full h-64 object-cover ${!p.is_available ? 'opacity-60' : ''}">
+                </div>
                 <div class="p-4 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold truncate">${p.name}</h3>
+                    <h3 class="text-lg font-bold truncate product-card-link cursor-pointer" data-product-id="${p.id}">${p.name}</h3>
                     <p class="text-slate-500 text-sm mt-1 flex-grow">${p.description}</p>
                     <div class="mt-4 flex justify-between items-center">
                         <span class="text-xl font-bold text-slate-800">${formatCurrency(p.price)}</span>
@@ -127,7 +132,7 @@ function renderLoginPage() {
 }
 
 function renderAdminPanel() {
-     mainContent.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex flex-wrap justify-between items-center gap-4 mb-6"><h2 class="text-3xl font-bold">Panel Admin</h2><div class="flex items-center gap-4"><button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Logout</button></div></div><div id="product-form-container" class="hidden bg-white p-6 rounded-xl shadow-lg mb-8"></div><div class="grid md:grid-cols-2 gap-8 mb-8"><div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-semibold mb-4">Pengaturan Toko</h3><div class="space-y-4"><div><label class="block text-sm mb-1">Upload Gambar QRIS</label><input type="file" id="qris-file-input" accept="image/*" class="w-full text-sm"/></div><div id="qris-preview-container" class="mt-2"><p class="text-xs">QRIS Saat Ini:</p><img src="${state.settings.qrisImageUrl || 'https://placehold.co/300x300?text=Belum+Ada+QRIS'}" class="mt-1 max-w-xs rounded-lg"/></div><button id="qris-save-btn" class="w-full bg-slate-800 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">Simpan QRIS</button></div><div class="mt-4 space-y-4"><div><label class="block text-sm mb-1">Nomor WhatsApp</label><input type="tel" id="whatsapp-input" value="${state.settings.whatsappNumber || ''}" class="w-full p-2 border rounded-lg" placeholder="6281234567890"><p class="text-xs text-slate-500 mt-1">Gunakan format 62.</p></div><button id="whatsapp-save-btn" class="w-full bg-slate-800 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">Simpan Nomor WA</button></div></div><div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-semibold mb-4">Manajemen Voucher</h3><form id="voucher-form" class="space-y-4"><h4 class="font-medium">Buat Voucher Baru</h4><div><label class="block text-sm">Kode Voucher</label><input type="text" id="voucher-code" class="mt-1 w-full p-2 border rounded-lg uppercase" placeholder="CONTOH: DISKON10K" required></div><div><label class="block text-sm">Potongan Harga (Rp)</label><input type="number" id="voucher-discount" class="mt-1 w-full p-2 border rounded-lg" placeholder="10000" required></div><button type="submit" class="w-full bg-blue-500 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">Buat Voucher</button></form><div class="mt-6"><h4 class="font-medium mb-2">Voucher Aktif</h4><div id="voucher-list" class="space-y-2">${state.vouchers.map(v => `<div class="flex justify-between items-center p-2 rounded-lg ${v.is_active ? 'bg-green-100' : 'bg-slate-100'}"><div class="font-mono text-sm"><strong>${v.code}</strong> - ${formatCurrency(v.discount_amount)}</div><div class="flex items-center gap-2"><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer voucher-status-switch" data-voucher-id="${v.id}" ${v.is_active ? 'checked' : ''}><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div></label><button class="delete-voucher-btn text-red-500 hover:text-red-700" data-voucher-id="${v.id}">✕</button></div></div>`).join('') || '<p class="text-sm text-slate-500">Belum ada voucher.</p>'}</div></div></div>
+     mainContent.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex flex-wrap justify-between items-center gap-4 mb-6"><h2 class="text-3xl font-bold">Panel Admin</h2><div class="flex items-center gap-4"><button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Logout</button></div></div><div id="product-form-container" class="hidden bg-white p-6 rounded-xl shadow-lg mb-8"></div><div class="grid md:grid-cols-2 gap-8 mb-8"><div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-semibold mb-4">Pengaturan Toko</h3><div class="space-y-4"><div><label class="block text-sm mb-1">Upload Gambar QRIS</label><input type="file" id="qris-file-input" accept="image/*" class="w-full text-sm"/></div><div id="qris-preview-container" class="mt-2"><p class="text-xs">QRIS Saat Ini:</p><img src="${state.settings.qrisImageUrl || 'https://placehold.co/300x300?text=Belum+Ada+QRIS'}" class="mt-1 max-w-xs rounded-lg"/></div><button id="qris-save-btn" class="w-full bg-slate-800 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">Simpan QRIS</button></div><div class="mt-4 space-y-4"><div><label class="block text-sm mb-1">Nomor WhatsApp</label><input type="tel" id="whatsapp-input" value="${state.settings.whatsappNumber || ''}" class="w-full p-2 border rounded-lg" placeholder="6281234567890"><p class="text-xs text-slate-500 mt-1">Gunakan format 62.</p></div><button id="whatsapp-save-btn" class="w-full bg-slate-800 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">Simpan Nomor WA</button></div><div class="mt-4 space-y-4"><div><label class="block text-sm mb-1">Upload Media Promosi (Gambar/Video)</label><input type="file" id="promo-media-input" accept="image/*,video/mp4" class="w-full text-sm"/></div><button id="promo-media-save-btn" class="w-full bg-slate-800 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">Simpan Promosi</button><button id="promo-media-delete-btn" class="w-full bg-red-100 text-red-700 px-6 py-2 rounded-lg mt-2">Hapus Promosi</button></div></div><div class="bg-white p-6 rounded-xl shadow-lg"><h3 class="text-xl font-semibold mb-4">Manajemen Voucher</h3><form id="voucher-form" class="space-y-4"><h4 class="font-medium">Buat Voucher Baru</h4><div><label class="block text-sm">Kode Voucher</label><input type="text" id="voucher-code" class="mt-1 w-full p-2 border rounded-lg uppercase" placeholder="CONTOH: DISKON10K" required></div><div><label class="block text-sm">Potongan Harga (Rp)</label><input type="number" id="voucher-discount" class="mt-1 w-full p-2 border rounded-lg" placeholder="10000" required></div><button type="submit" class="w-full bg-blue-500 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2">Buat Voucher</button></form><div class="mt-6"><h4 class="font-medium mb-2">Voucher Aktif</h4><div id="voucher-list" class="space-y-2">${state.vouchers.map(v => `<div class="flex justify-between items-center p-2 rounded-lg ${v.is_active ? 'bg-green-100' : 'bg-slate-100'}"><div class="font-mono text-sm"><strong>${v.code}</strong> - ${formatCurrency(v.discount_amount)}</div><div class="flex items-center gap-2"><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer voucher-status-switch" data-voucher-id="${v.id}" ${v.is_active ? 'checked' : ''}><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div></label><button class="delete-voucher-btn text-red-500 hover:text-red-700" data-voucher-id="${v.id}">✕</button></div></div>`).join('') || '<p class="text-sm text-slate-500">Belum ada voucher.</p>'}</div></div></div>
     </div>
     <div class="bg-white p-6 rounded-xl shadow-lg"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-semibold">Daftar Produk</h3><button id="add-product-btn" class="bg-slate-800 text-white px-4 py-2 rounded-lg">Tambah Produk</button></div><div class="overflow-x-auto"><table class="w-full text-left"><thead class="bg-slate-100"><tr><th class="p-3">Gambar</th><th class="p-3">Nama</th><th class="p-3">Harga</th><th class="p-3">Stok</th><th class="p-3">Aksi</th></tr></thead><tbody id="product-list-body">${state.products.map(p => `
     <tr class="border-b"><td class="p-3"><img src="${p.image_url}" class="w-16 h-16 rounded-md object-cover"/></td><td class="p-3 font-medium">${p.name}</td><td class="p-3">${formatCurrency(p.price)}</td><td class="p-3"><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" value="" class="sr-only peer stock-switch" data-product-id="${p.id}" ${p.is_available ? 'checked' : ''}><div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div></label></td><td class="p-3"><button data-product-id="${p.id}" class="edit-product-btn text-blue-600">Edit</button><button data-product-id="${p.id}" class="delete-product-btn text-red-600 ml-2">Hapus</button></td></tr>`).join('')}</tbody></table></div></div></div>`;
@@ -141,13 +146,82 @@ function renderProductForm(product = null) {
 
 function renderCheckoutPage() {
     const cartItems = Object.keys(state.cart).map(id => ({...state.products.find(p => p.id == id), quantity: state.cart[id]})).filter(Boolean);
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const discount = state.appliedVoucher ? state.appliedVoucher.discount_amount : 0;
+    const total = Math.max(0, subtotal - discount);
+    
     let whatsappButtonHtml = '';
     if (state.settings.whatsappNumber) {
         whatsappButtonHtml = `<div class="text-center mt-6"><button id="whatsapp-contact-btn" class="bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 w-full md:w-auto text-lg">✅ Sudah bayar? Klik di sini</button></div>`;
     }
-    mainContent.innerHTML = `<div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg"><h2 class="text-3xl font-bold mb-6 text-center">Checkout</h2><div class="grid md:grid-cols-2 gap-8"><div><h3 class="text-xl font-semibold mb-4 border-b pb-2">Ringkasan Pesanan</h3><div class="space-y-3 mb-4">${cartItems.map(item => `<div class="flex justify-between items-center text-sm"><span>${item.name} <span class="text-slate-500">x${item.quantity}</span></span><span class="font-medium">${formatCurrency(item.price * item.quantity)}</span></div>`).join('')}</div><div class="flex justify-between font-bold text-lg border-t pt-3"><span>Total Pembayaran</span><span>${formatCurrency(total)}</span></div></div><div><h3 class="text-xl font-semibold mb-4 border-b pb-2">Cara Pembayaran</h3><div class="bg-slate-50 p-4 rounded-lg text-sm mb-4"><ol class="list-decimal list-inside space-y-2 text-slate-700"><li>Buka aplikasi pembayaran Anda (GoPay, OVO, Dana, M-Banking).</li><li>Gunakan fitur <strong>Scan/Pindai QR</strong>.</li><li>Arahkan kamera ke kode QR di bawah ini.</li><li>Pastikan total tagihan sudah sesuai, lalu bayar.</li></ol></div>${state.settings.qrisImageUrl ? `<div class="text-center"><img src="${state.settings.qrisImageUrl}" class="mx-auto rounded-lg shadow-md max-w-xs w-full"/>${whatsappButtonHtml}</div>` : `<div class="text-center p-8 bg-slate-100 rounded-lg"><p class="text-slate-500">QRIS belum diatur oleh admin.</p></div>`}</div></div><div class="text-center mt-8"><button id="back-to-home-btn" class="bg-slate-800 text-white px-8 py-3 rounded-lg">Kembali ke Toko</button></div></div>`;
+    mainContent.innerHTML = `<div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+        <h2 class="text-3xl font-bold mb-6 text-center">Checkout</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Ringkasan Pesanan</h3>
+                <div class="space-y-3 mb-4">
+                    ${cartItems.map(item => `
+                        <div class="flex justify-between items-center text-sm">
+                            <span>${item.name} <span class="text-slate-500">x${item.quantity}</span></span>
+                            <span class="font-medium">${formatCurrency(item.price * item.quantity)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="border-t pt-3 space-y-2">
+                    <div class="flex justify-between text-slate-600"><span>Subtotal</span><span>${formatCurrency(subtotal)}</span></div>
+                    ${state.appliedVoucher ? `<div class="flex justify-between text-green-600"><span>Diskon (${state.appliedVoucher.code})</span><span>-${formatCurrency(discount)}</span></div>` : ''}
+                    <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2"><span>Total Pembayaran</span><span>${formatCurrency(total)}</span></div>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Cara Pembayaran</h3>
+                <div class="bg-slate-50 p-4 rounded-lg text-sm mb-4">
+                    <ol class="list-decimal list-inside space-y-2 text-slate-700">
+                        <li>Buka aplikasi pembayaran Anda (GoPay, OVO, Dana, M-Banking).</li>
+                        <li>Gunakan fitur <strong>Scan/Pindai QR</strong>.</li>
+                        <li>Arahkan kamera ke kode QR di bawah ini.</li>
+                        <li>Pastikan total tagihan sudah sesuai, lalu bayar.</li>
+                    </ol>
+                </div>
+                ${state.settings.qrisImageUrl ? `<div class="text-center"><img src="${state.settings.qrisImageUrl}" class="mx-auto rounded-lg shadow-md max-w-xs w-full"/>${whatsappButtonHtml}</div>` : `<div class="text-center p-8 bg-slate-100 rounded-lg"><p class="text-slate-500">QRIS belum diatur oleh admin.</p></div>`}
+            </div>
+        </div>
+        <div class="text-center mt-8">
+            <button id="back-to-home-btn" class="bg-slate-800 text-white px-8 py-3 rounded-lg">Kembali ke Toko</button>
+        </div>
+    </div>`;
 }
+
+function renderProductDetailPage() {
+    const product = state.products.find(p => p.id == state.selectedProductId);
+    if (!product) {
+        state.view = 'home';
+        render();
+        return;
+    }
+
+    mainContent.innerHTML = `
+        <div>
+            <button id="back-to-products-btn" class="mb-6 bg-slate-200 text-slate-800 px-4 py-2 rounded-lg hover:bg-slate-300">← Kembali ke Produk</button>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <img src="${product.image_url || 'https://placehold.co/600x600'}" alt="${product.name}" class="w-full h-auto rounded-lg shadow-md">
+                    </div>
+                    <div>
+                        <h2 class="text-4xl font-bold mb-4">${product.name}</h2>
+                        <p class="text-3xl font-light text-slate-800 mb-6">${formatCurrency(product.price)}</p>
+                        <p class="text-slate-600 leading-relaxed mb-6">${product.description}</p>
+                        <button data-product-id="${product.id}" class="add-to-cart-btn w-full bg-slate-800 text-white py-3 rounded-lg hover:bg-slate-700 disabled:bg-slate-400 disabled:cursor-not-allowed" ${!product.is_available ? 'disabled' : ''}>
+                            ${product.is_available ? 'Tambah ke Keranjang' : 'Stok Habis'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 
 function renderCart() {
     const container = document.getElementById('cart-items-container');
@@ -180,7 +254,7 @@ async function handleSaveQris(e) {
     const file = document.getElementById('qris-file-input').files[0];
     if (!file) { showToast('Pilih file QRIS terlebih dahulu.', 'error'); setLoading(btn, false, 'Simpan QRIS'); return; }
     const path = `qris/${Date.now()}-${file.name}`;
-    const url = await uploadImage(file, path);
+    const url = await uploadFile(file, path);
     if (url) {
         const { error } = await sb.from('settings').upsert({ id: 1, qris_image_url: url });
         if (error) { showToast(`Gagal menyimpan QRIS: ${error.message}`, 'error'); }
@@ -213,7 +287,7 @@ async function handleSaveProduct(e) {
     const id = e.target['product-id'].value;
     const file = e.target['product-image-file'].files[0];
     let imageUrl = state.products.find(p => p.id == id)?.image_url;
-    if (file) imageUrl = await uploadImage(file, `products/${Date.now()}-${file.name}`);
+    if (file) imageUrl = await uploadFile(file, `products/${Date.now()}-${file.name}`);
     if (!imageUrl && !id) {
         showToast('Gambar produk wajib diunggah untuk produk baru.', 'error');
         setLoading(btn, false, 'Simpan');
@@ -226,9 +300,53 @@ async function handleSaveProduct(e) {
     setLoading(btn, false, 'Simpan');
 }
 
+async function handleSavePromoMedia(e) {
+    const btn = e.target;
+    setLoading(btn, true, 'Menyimpan');
+    const file = document.getElementById('promo-media-input').files[0];
+    if (!file) { showToast('Pilih file promosi terlebih dahulu.', 'error'); setLoading(btn, false, 'Simpan Promosi'); return; }
+    
+    const mediaType = file.type.startsWith('video') ? 'video' : 'image';
+    const path = `promo/${Date.now()}-${file.name}`;
+    const url = await uploadFile(file, path);
+
+    if (url) {
+        const { error } = await sb.from('settings').upsert({ id: 1, promo_media_url: url, promo_media_type: mediaType });
+        if (error) { showToast(`Gagal menyimpan promosi: ${error.message}`, 'error'); }
+        else {
+            state.settings.promo_media_url = url;
+            state.settings.promo_media_type = mediaType;
+            showToast('Media promosi berhasil diupdate!');
+        }
+    }
+    setLoading(btn, false, 'Simpan Promosi');
+}
+
+async function handleDeletePromoMedia(e) {
+     const btn = e.target;
+     setLoading(btn, true, 'Menghapus');
+     const { error } = await sb.from('settings').upsert({ id: 1, promo_media_url: null, promo_media_type: null });
+     if (error) { showToast(`Gagal menghapus promosi: ${error.message}`, 'error'); }
+     else {
+        state.settings.promo_media_url = null;
+        state.settings.promo_media_type = null;
+        showToast('Media promosi berhasil dihapus.');
+     }
+     setLoading(btn, false, 'Hapus Promosi');
+}
+
+
 // --- Inisialisasi Event Listeners & Aplikasi ---
 document.addEventListener('click', async (e) => {
-    if (e.target.matches('#home-btn, #nav-home-btn, #footer-home-btn')) { state.view = 'home'; render(); }
+    const closestCard = e.target.closest('.product-card-link');
+    if (closestCard) {
+        state.selectedProductId = closestCard.dataset.productId;
+        state.view = 'productDetail';
+        render();
+        return;
+    }
+
+    if (e.target.matches('#home-btn, #nav-home-btn, #footer-home-btn, #back-to-products-btn')) { state.view = 'home'; render(); }
     if (e.target.matches('#nav-admin-btn, #footer-admin-btn')) { state.view = 'admin'; render(); }
     if (e.target.matches('#back-to-home-btn')) { state.view = 'home'; render(); }
     if (e.target.matches('#cart-btn, #cart-btn *')) { floatingCartEl.classList.remove('hidden'); floatingCartEl.classList.add('flex'); renderCart(); }
@@ -257,6 +375,8 @@ document.addEventListener('click', async (e) => {
     if (e.target.matches('.delete-voucher-btn')) { showToast('Voucher dihapus.', 'error'); await sb.from('vouchers').delete().match({ id: e.target.dataset.voucherId }); }
     if (e.target.matches('#qris-save-btn')) { handleSaveQris(e); }
     if (e.target.matches('#whatsapp-save-btn')) { handleSaveWhatsapp(e); }
+    if (e.target.matches('#promo-media-save-btn')) { handleSavePromoMedia(e); }
+    if (e.target.matches('#promo-media-delete-btn')) { handleDeletePromoMedia(e); }
     if (e.target.matches('#apply-voucher-btn')) {
         const btn = e.target;
         setLoading(btn, true, 'Terapkan');
@@ -278,7 +398,12 @@ document.addEventListener('click', async (e) => {
         let message = `Halo, saya ingin konfirmasi pembayaran untuk pesanan:\n\n${cartItems.map(item => `- ${item.name} (x${item.quantity})`).join('\n')}\n\nTotal: *${formatCurrency(total)}*`;
         window.open(`https://wa.me/${state.settings.whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
         state.cart = {};
+        state.appliedVoucher = null;
         showToast('Konfirmasi terkirim, keranjang dikosongkan.');
+    }
+    if (e.target.matches('#skip-promo-btn')) {
+        promoPopup.classList.add('hidden');
+        sessionStorage.setItem('promoShown', 'true');
     }
 });
 
@@ -360,27 +485,38 @@ async function init() {
 
     const { data: { session } } = await sb.auth.getSession();
     state.user = session?.user;
-    document.getElementById('user-id-footer').textContent = `User ID: ${state.user?.id || 'Not logged in'}`;
 
     const fetchAllData = async () => {
         const { data: productsData } = await sb.from('products').select('*').order('created_at', { ascending: false });
         state.products = productsData || [];
-        const { data: settingsData } = await sb.from('settings').select('qris_image_url, whatsapp_number').eq('id', 1).single();
+        const { data: settingsData } = await sb.from('settings').select('qris_image_url, whatsapp_number, promo_media_url, promo_media_type').eq('id', 1).single();
         if (settingsData) {
             state.settings.qrisImageUrl = settingsData.qris_image_url;
             state.settings.whatsappNumber = settingsData.whatsapp_number;
+            state.settings.promo_media_url = settingsData.promo_media_url;
+            state.settings.promo_media_type = settingsData.promo_media_type;
         }
         const { data: vouchersData } = await sb.from('vouchers').select('*').order('created_at', { ascending: false });
         state.vouchers = vouchersData || [];
         state.isReady = true;
-        render();
+        
+        render(); // Render konten utama terlebih dahulu
+
+        if (state.settings.promo_media_url && !sessionStorage.getItem('promoShown')) {
+            const container = document.getElementById('promo-media-container');
+            if (state.settings.promo_media_type === 'video') {
+                container.innerHTML = `<video src="${state.settings.promo_media_url}" class="w-full h-full object-cover rounded-lg" controls></video>`;
+            } else {
+                container.innerHTML = `<img src="${state.settings.promo_media_url}" class="w-full h-full object-cover rounded-lg">`;
+            }
+            promoPopup.classList.remove('hidden');
+        }
     };
     
     await fetchAllData();
 
     sb.auth.onAuthStateChange((_event, session) => {
         state.user = session?.user;
-        document.getElementById('user-id-footer').textContent = `User ID: ${state.user?.id || 'Not logged in'}`;
         fetchAllData();
     });
 
