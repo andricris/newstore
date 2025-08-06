@@ -1,5 +1,119 @@
-Website E-Commerce TokoProfesionalSelamat datang di repositori TokoProfesional! Ini adalah proyek website e-commerce yang fungsional dan modern, dibangun dengan pendekatan serverless menggunakan HTML, CSS, dan JavaScript murni di sisi klien, serta didukung oleh Supabase sebagai backend.Proyek ini dirancang untuk menjadi fondasi yang kuat bagi toko online, dengan panel admin yang lengkap untuk manajemen konten dan pesanan.✨ Fitur UtamaWebsite ini dilengkapi dengan berbagai fitur profesional yang siap pakai:Untuk Pelanggan:Galeri Produk Dinamis: Menampilkan semua produk dengan gambar, nama, deskripsi, dan harga.Pencarian Real-time: Mencari produk secara langsung berdasarkan nama.Urutkan Produk: Mengurutkan produk berdasarkan harga (termurah/termahal) atau yang terbaru.Floating Cart: Keranjang belanja yang mudah diakses dari mana saja tanpa meninggalkan halaman.Sistem Voucher: Pelanggan dapat memasukkan kode voucher untuk mendapatkan potongan harga.Stok Real-time: Produk yang habis akan ditandai "Stok Habis" dan tidak bisa dibeli.Halaman Detail Produk: Setiap produk dapat diklik untuk melihat detail yang lebih lengkap.Popup Promosi: Menampilkan iklan (gambar/video) saat pertama kali website dikunjungi.Desain Responsif: Tampilan yang optimal di berbagai perangkat, dari desktop hingga mobile.Untuk Admin:Panel Admin Aman: Halaman admin dilindungi oleh sistem login dengan email dan password.Manajemen Produk (CRUD): Tambah, lihat, edit, dan hapus produk dengan mudah.Manajemen Stok: Mengubah status ketersediaan produk (Ready/Kosong) dengan satu klik.Manajemen Voucher (CRUD): Membuat, mengaktifkan/menonaktifkan, dan menghapus kode voucher.Pengaturan Toko:Mengunggah gambar QRIS pembayaran.Mengatur nomor WhatsApp admin untuk konfirmasi pesanan.Mengunggah media promosi (gambar/video) untuk popup iklan.🛠️ Teknologi yang DigunakanFrontend:HTML5Tailwind CSS untuk stylingJavaScript (ES6 Modules) untuk logika dan interaktivitasBackend:Supabase sebagai Backend-as-a-Service (BaaS)Supabase Database: Database PostgreSQL untuk menyimpan data produk, pengaturan, dan voucher.Supabase Auth: Untuk sistem login admin.Supabase Storage: Untuk menyimpan semua file gambar dan video.Supabase Realtime: Agar website otomatis update saat ada perubahan data di database.🚀 Panduan Setup & InstalasiUntuk menjalankan proyek ini di lingkungan Anda sendiri, ikuti langkah-langkah berikut:1. Persiapan di SupabaseBuat akun gratis di Supabase.Buat proyek baru.2. Setup Database & KeamananBuka proyek Anda, pergi ke SQL Editor.Jalankan skrip SQL dari file database_setup.sql yang telah disediakan. Skrip ini akan membuat tabel products, settings, vouchers, membuat Storage Bucket images, dan mengatur semua kebijakan keamanan (RLS) yang diperlukan.3. Dapatkan Kunci API SupabaseMasih di dasbor Supabase, pergi ke Project Settings (ikon gerigi).Klik menu API.Anda akan memerlukan dua hal dari halaman ini:Project URLProject API Keys > anon public key4. Konfigurasi Kode LokalUnduh atau clone repositori ini.Buka file app.js.Di bagian paling atas, ganti nilai supabaseUrl dan supabaseAnonKey dengan kunci yang Anda dapatkan dari dasbor Supabase Anda.// app.js
+Website E-Commerce TokoProfesional
+Selamat datang di repositori TokoProfesional! Ini adalah proyek website e-commerce yang fungsional dan modern, dibangun dengan pendekatan serverless menggunakan HTML, CSS, dan JavaScript murni di sisi klien, serta didukung oleh Supabase sebagai backend.
+
+Proyek ini dirancang untuk menjadi fondasi yang kuat bagi toko online, dengan panel admin yang lengkap untuk manajemen konten dan pesanan.
+
+✨ Fitur Utama
+Website ini dilengkapi dengan berbagai fitur profesional yang siap pakai:
+
+Untuk Pelanggan:
+Galeri Produk Dinamis: Menampilkan semua produk dengan gambar, nama, deskripsi, dan harga.
+
+Pencarian Real-time: Mencari produk secara langsung berdasarkan nama.
+
+Urutkan Produk: Mengurutkan produk berdasarkan harga (termurah/termahal) atau yang terbaru.
+
+Floating Cart: Keranjang belanja yang mudah diakses dari mana saja tanpa meninggalkan halaman.
+
+Sistem Voucher: Pelanggan dapat memasukkan kode voucher untuk mendapatkan potongan harga.
+
+Stok Real-time: Produk yang habis akan ditandai "Stok Habis" dan tidak bisa dibeli.
+
+Halaman Detail Produk: Setiap produk dapat diklik untuk melihat detail yang lebih lengkap.
+
+Popup Promosi: Menampilkan iklan (gambar/video) saat pertama kali website dikunjungi.
+
+Desain Responsif: Tampilan yang optimal di berbagai perangkat, dari desktop hingga mobile.
+
+Untuk Admin:
+Panel Admin Aman: Halaman admin dilindungi oleh sistem login dengan email dan password.
+
+Manajemen Produk (CRUD): Tambah, lihat, edit, dan hapus produk dengan mudah.
+
+Manajemen Stok: Mengubah status ketersediaan produk (Ready/Kosong) dengan satu klik.
+
+Manajemen Voucher (CRUD): Membuat, mengaktifkan/menonaktifkan, dan menghapus kode voucher.
+
+Pengaturan Toko:
+
+Mengunggah gambar QRIS pembayaran.
+
+Mengatur nomor WhatsApp admin untuk konfirmasi pesanan.
+
+Mengunggah media promosi (gambar/video) untuk popup iklan.
+
+🛠️ Teknologi yang Digunakan
+Frontend:
+
+HTML5
+
+Tailwind CSS untuk styling
+
+JavaScript (ES6 Modules) untuk logika dan interaktivitas
+
+Backend:
+
+Supabase sebagai Backend-as-a-Service (BaaS)
+
+Supabase Database: Database PostgreSQL untuk menyimpan data produk, pengaturan, dan voucher.
+
+Supabase Auth: Untuk sistem login admin.
+
+Supabase Storage: Untuk menyimpan semua file gambar dan video.
+
+Supabase Realtime: Agar website otomatis update saat ada perubahan data di database.
+
+🚀 Panduan Setup & Instalasi
+Untuk menjalankan proyek ini di lingkungan Anda sendiri, ikuti langkah-langkah berikut:
+
+1. Persiapan di Supabase
+Buat akun gratis di Supabase.
+
+Buat proyek baru.
+
+2. Setup Database & Keamanan
+Buka proyek Anda, pergi ke SQL Editor.
+
+Jalankan skrip SQL dari file database_setup.sql yang telah disediakan. Skrip ini akan membuat tabel products, settings, vouchers, membuat Storage Bucket images, dan mengatur semua kebijakan keamanan (RLS) yang diperlukan.
+
+3. Dapatkan Kunci API Supabase
+Masih di dasbor Supabase, pergi ke Project Settings (ikon gerigi).
+
+Klik menu API.
+
+Anda akan memerlukan dua hal dari halaman ini:
+
+Project URL
+
+Project API Keys > anon public key
+
+4. Konfigurasi Kode Lokal
+Unduh atau clone repositori ini.
+
+Buka file app.js.
+
+Di bagian paling atas, ganti nilai supabaseUrl dan supabaseAnonKey dengan kunci yang Anda dapatkan dari dasbor Supabase Anda.
+
+// app.js
 
 const supabaseUrl = 'URL_PROYEK_SUPABASE_ANDA';
 const supabaseAnonKey = 'KUNCI_ANON_PUBLIK_ANDA';
-5. Buat User AdminDi dasbor Supabase, pergi ke menu Authentication.Klik tombol Add user dan buat pengguna pertama Anda dengan email dan password yang aman. Ini akan menjadi akun yang Anda gunakan untuk login ke Panel Admin.6. Jalankan WebsiteCukup buka file index.html di browser Anda. Semuanya sudah siap untuk digunakan!💡 Cara PenggunaanBuka website dan klik tombol Admin di header.Login menggunakan email dan password yang telah Anda buat di dasbor Supabase.Setelah berhasil login, Anda akan diarahkan ke Panel Admin.Di sini Anda bisa mulai menambahkan produk, mengatur QRIS, nomor WhatsApp, dan membuat voucher diskon.Semua perubahan akan langsung terlihat di halaman utama.
+
+5. Buat User Admin
+Di dasbor Supabase, pergi ke menu Authentication.
+
+Klik tombol Add user dan buat pengguna pertama Anda dengan email dan password yang aman. Ini akan menjadi akun yang Anda gunakan untuk login ke Panel Admin.
+
+6. Jalankan Website
+Cukup buka file index.html di browser Anda. Semuanya sudah siap untuk digunakan!
+
+💡 Cara Penggunaan
+Buka website dan klik tombol Admin di header.
+
+Login menggunakan email dan password yang telah Anda buat di dasbor Supabase.
+
+Setelah berhasil login, Anda akan diarahkan ke Panel Admin.
+
+Di sini Anda bisa mulai menambahkan produk, mengatur QRIS, nomor WhatsApp, dan membuat voucher diskon.
+
+Semua perubahan akan langsung terlihat di halaman utama.
