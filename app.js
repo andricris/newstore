@@ -1,9 +1,9 @@
 // =====================================
-// TOKOPROFESIONAL - ENHANCED VERSION
-// Based on working minimal version + additional features
+// TOKOPROFESIONAL - FIXED VERSION
+// Perbaikan untuk login admin dan cart functionality
 // =====================================
 
-console.log("🚀 TokoProfesional Enhanced - Starting...");
+console.log("🚀 TokoProfesional Fixed - Starting...");
 
 // Initialize Supabase
 const supabaseUrl = 'https://viresxwhyqcflmfoyxsf.supabase.co';
@@ -18,10 +18,11 @@ let state = {
     cart: {},
     searchQuery: '',
     sortBy: 'newest',
-    currentView: 'home',
+    currentView: 'home', // 'home', 'admin-login', 'admin-panel'
     user: null,
     settings: {},
-    vouchers: []
+    vouchers: [],
+    appliedVoucher: null
 };
 
 // Helper Functions
@@ -34,18 +35,35 @@ const formatCurrency = (amount) => new Intl.NumberFormat('id-ID', {
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container') || createToastContainer();
     const toast = document.createElement('div');
-    toast.className = `toast ${type} fixed top-4 right-4 z-50 p-4 rounded-lg text-white max-w-sm`;
+    toast.className = `toast fixed top-4 right-4 z-50 p-4 rounded-lg text-white max-w-sm shadow-lg`;
     
+    // Set background color based on type
     if (type === 'success') toast.style.backgroundColor = '#10b981';
     if (type === 'error') toast.style.backgroundColor = '#ef4444';
     if (type === 'info') toast.style.backgroundColor = '#3b82f6';
     
     toast.textContent = message;
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    toast.style.transition = 'all 0.3s ease';
+    
     container.appendChild(toast);
     
+    // Animate in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Animate out and remove
     setTimeout(() => {
         toast.style.opacity = '0';
-        setTimeout(() => container.removeChild(toast), 300);
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (container.contains(toast)) {
+                container.removeChild(toast);
+            }
+        }, 300);
     }, 3000);
 }
 
@@ -111,6 +129,8 @@ async function loadVouchers() {
 
 // Render Functions
 function renderProducts() {
+    console.log('🎨 Rendering products view');
+    
     const mainContent = document.getElementById('main-content');
     if (!mainContent) return;
     
@@ -120,7 +140,7 @@ function renderProducts() {
     if (state.searchQuery) {
         displayProducts = displayProducts.filter(p => 
             p.name.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
-            p.description.toLowerCase().includes(state.searchQuery.toLowerCase())
+            (p.description && p.description.toLowerCase().includes(state.searchQuery.toLowerCase()))
         );
     }
     
@@ -166,7 +186,7 @@ function renderProducts() {
                         </select>
                         
                         <!-- Cart Button -->
-                        <button id="cart-btn" class="relative bg-slate-800 text-white px-6 py-2 rounded-lg hover:bg-slate-700 transition-colors">
+                        <button onclick="openCart()" class="relative bg-slate-800 text-white px-6 py-2 rounded-lg hover:bg-slate-700 transition-colors">
                             🛒 Cart
                             ${cartItems > 0 ? `<span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">${cartItems}</span>` : ''}
                         </button>
@@ -206,7 +226,7 @@ function renderProducts() {
                                     </span>
                                     ${product.discount_percentage > 0 ? `
                                         <div class="text-sm text-gray-500 line-through">
-                                            ${formatCurrency(product.price / (1 - product.discount_percentage / 100))}
+                                            ${formatCurrency(Math.round(product.price / (1 - product.discount_percentage / 100)))}
                                         </div>
                                     ` : ''}
                                 </div>
@@ -235,22 +255,27 @@ function renderProducts() {
                 </div>
             ` : ''}
             
-            <!-- Admin Panel Link -->
-            <div class="mt-12 text-center">
+            <!-- Navigation Buttons -->
+            <div class="mt-12 flex justify-center space-x-4">
                 <button onclick="switchToAdmin()" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
                     ⚙️ Admin Panel
                 </button>
+                ${state.user ? `
+                    <button onclick="logout()" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
+                        🚪 Logout
+                    </button>
+                ` : ''}
             </div>
         </div>
     `;
     
     mainContent.innerHTML = html;
-    
-    // Attach event listeners
     attachEventListeners();
 }
 
 function renderAdminLogin() {
+    console.log('🔐 Rendering admin login');
+    
     const mainContent = document.getElementById('main-content');
     if (!mainContent) return;
     
@@ -262,12 +287,13 @@ function renderAdminLogin() {
                     <p class="text-slate-600 mt-2">Enter your credentials to access admin panel</p>
                 </div>
                 
-                <form id="login-form" class="space-y-4">
+                <form id="login-form" class="space-y-4" data-handled="true">
                     <div>
                         <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email</label>
                         <input type="email" 
                                id="email" 
                                required 
+                               autocomplete="email"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
@@ -276,22 +302,27 @@ function renderAdminLogin() {
                         <input type="password" 
                                id="password" 
                                required 
+                               autocomplete="current-password"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
-                    <div id="login-error" class="hidden text-red-600 text-sm text-center"></div>
+                    <div id="login-error" class="hidden text-red-600 text-sm text-center bg-red-50 p-3 rounded"></div>
                     
                     <button type="submit" 
                             id="login-btn"
-                            class="w-full bg-slate-800 text-white py-3 rounded-lg hover:bg-slate-700 transition-colors">
-                        🔓 Login
+                            class="w-full bg-slate-800 text-white py-3 rounded-lg hover:bg-slate-700 transition-colors font-medium">
+                        🔓 Login to Admin Panel
                     </button>
                 </form>
                 
                 <div class="mt-6 text-center">
-                    <button onclick="switchToHome()" class="text-blue-500 hover:text-blue-600 text-sm">
+                    <button onclick="switchToHome()" class="text-blue-500 hover:text-blue-600 text-sm font-medium">
                         ← Back to Home
                     </button>
+                </div>
+                
+                <div class="mt-6 bg-blue-50 p-4 rounded-lg text-sm">
+                    <p class="text-blue-800"><strong>Note:</strong> Use the email and password you created in Supabase Authentication.</p>
                 </div>
             </div>
         </div>
@@ -300,144 +331,183 @@ function renderAdminLogin() {
     mainContent.innerHTML = html;
     
     // Attach login form listener
-    document.getElementById('login-form').addEventListener('submit', handleLogin);
-}
-
-// Event Handlers
-function attachEventListeners() {
-    const searchInput = document.getElementById('search-input');
-    const sortSelect = document.getElementById('sort-select');
-    
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            state.searchQuery = e.target.value;
-            renderProducts();
-        });
-    }
-    
-    if (sortSelect) {
-        sortSelect.addEventListener('change', (e) => {
-            state.sortBy = e.target.value;
-            renderProducts();
-        });
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
     }
 }
 
-async function handleLogin(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const errorDiv = document.getElementById('login-error');
-    const loginBtn = document.getElementById('login-btn');
-    
-    loginBtn.textContent = '🔄 Logging in...';
-    loginBtn.disabled = true;
-    
-    try {
-        const { data, error } = await sb.auth.signInWithPassword({ email, password });
-        
-        if (error) {
-            errorDiv.textContent = error.message;
-            errorDiv.classList.remove('hidden');
-        } else {
-            state.user = data.user;
-            showToast('Login successful!', 'success');
-            // Redirect to admin panel
-            switchToHome(); // For now, just go back to home
-        }
-    } catch (exception) {
-        errorDiv.textContent = 'Login failed: ' + exception.message;
-        errorDiv.classList.remove('hidden');
-    }
-    
-    loginBtn.textContent = '🔓 Login';
-    loginBtn.disabled = false;
-}
-
-function addToCart(productId) {
-    const product = state.products.find(p => p.id === productId);
-    if (!product || !product.is_available) return;
-    
-    state.cart[productId] = (state.cart[productId] || 0) + 1;
-    showToast(`${product.name} added to cart!`, 'success');
-    renderProducts(); // Re-render to update cart count
-}
-
-function switchToAdmin() {
-    state.currentView = 'admin-login';
-    renderAdminLogin();
-}
-
-function switchToHome() {
-    state.currentView = 'home';
-    renderProducts();
-}
-
-// Initialization
-async function init() {
-    console.log('🚀 Initializing TokoProfesional...');
+function renderAdminPanel() {
+    console.log('👨‍💼 Rendering admin panel');
     
     const mainContent = document.getElementById('main-content');
-    if (!mainContent) {
-        console.error('❌ main-content element not found!');
-        return;
-    }
+    if (!mainContent) return;
     
-    // Show loading state
-    mainContent.innerHTML = `
-        <div class="flex items-center justify-center min-h-screen">
-            <div class="text-center">
-                <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-slate-800 mx-auto mb-4"></div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-2">Loading TokoProfesional...</h2>
-                <p class="text-slate-600">Connecting to database...</p>
+    const html = `
+        <div class="container mx-auto p-4 max-w-6xl">
+            <!-- Admin Header -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-slate-800">⚙️ Admin Panel</h1>
+                        <p class="text-slate-600">Welcome, ${state.user?.email || 'Admin'}</p>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button onclick="switchToHome()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                            🏠 Back to Store
+                        </button>
+                        <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                            🚪 Logout
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-    `;
-    
-    try {
-        // Load all data
-        console.log('📦 Loading products...');
-        state.products = await loadProducts();
-        
-        console.log('⚙️ Loading settings...');
-        state.settings = await loadSettings();
-        
-        console.log('🎟️ Loading vouchers...');
-        state.vouchers = await loadVouchers();
-        
-        console.log('✅ All data loaded successfully!');
-        
-        // Render the application
-        renderProducts();
-        
-        // Set up auth listener
-        sb.auth.onAuthStateChange((event, session) => {
-            console.log('🔄 Auth state changed:', event);
-            state.user = session?.user || null;
-        });
-        
-    } catch (error) {
-        console.error('💥 Initialization failed:', error);
-        mainContent.innerHTML = `
-            <div class="flex flex-col items-center justify-center min-h-screen text-center p-4">
-                <div class="text-red-500 text-6xl mb-4">❌</div>
-                <h2 class="text-3xl font-bold text-red-600 mb-4">Initialization Failed</h2>
-                <p class="text-gray-600 mb-6">${error.message}</p>
-                <button onclick="location.reload()" class="bg-blue-500 text-white px-6 py-3 rounded-lg">
-                    🔄 Reload Page
-                </button>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-slate-800">${state.products.length}</h3>
+                            <p class="text-slate-600 text-sm">Total Products</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 p-3 rounded-lg">
+                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-slate-800">${state.products.filter(p => p.is_available).length}</h3>
+                            <p class="text-slate-600 text-sm">Available</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <div class="bg-red-100 p-3 rounded-lg">
+                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-slate-800">${state.products.filter(p => !p.is_available).length}</h3>
+                            <p class="text-slate-600 text-sm">Out of Stock</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 p-3 rounded-lg">
+                            <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-slate-800">${state.vouchers.length}</h3>
+                            <p class="text-slate-600 text-sm">Active Vouchers</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        `;
-    }
-}
-
-// Global functions
-window.addToCart = addToCart;
-window.switchToAdmin = switchToAdmin;
-window.switchToHome = switchToHome;
-
-// Start the application
-document.addEventListener('DOMContentLoaded', init);
-
-console.log('✅ TokoProfesional Enhanced loaded successfully!');
+            
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-xl font-semibold text-slate-800 mb-4">Quick Actions</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="addNewProduct()" class="bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors text-left">
+                        <div class="flex items-center">
+                            <svg class="h-6 w-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <div>
+                                <h3 class="font-medium">Add New Product</h3>
+                                <p class="text-sm opacity-90">Create a new product listing</p>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button onclick="manageVouchers()" class="bg-purple-500 text-white p-4 rounded-lg hover:bg-purple-600 transition-colors text-left">
+                        <div class="flex items-center">
+                            <svg class="h-6 w-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            <div>
+                                <h3 class="font-medium">Manage Vouchers</h3>
+                                <p class="text-sm opacity-90">Create and edit discount codes</p>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button onclick="viewSettings()" class="bg-slate-500 text-white p-4 rounded-lg hover:bg-slate-600 transition-colors text-left">
+                        <div class="flex items-center">
+                            <svg class="h-6 w-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <div>
+                                <h3 class="font-medium">Store Settings</h3>
+                                <p class="text-sm opacity-90">Configure QRIS, WhatsApp, etc.</p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Products Table -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6 border-b">
+                    <h2 class="text-xl font-semibold text-slate-800">Product Management</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Price</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-200">
+                            ${state.products.map(product => `
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="${product.image_url || 'https://placehold.co/50x50'}" 
+                                                 alt="${product.name}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-4">
+                                            <div>
+                                                <div class="text-sm font-medium text-slate-900">${product.name}</div>
+                                                <div class="text-sm text-slate-500">${product.category || 'No category'}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-slate-900">${formatCurrency(product.price)}</div>
+                                        ${product.discount_percentage > 0 ? `
+                                            <div class="text-sm text-red-500">-${product.discount_percentage}% off</div>
+                                        ` : ''}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" 
+                                                   class="sr-only peer" 
+                                                   ${product.is_available ? 'checked' : ''}
+                                                   onchange="toggleProductStatus(${product.id})">
+                                            <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                                        </label>
+                                        <span class="ml-2 text-sm ${product.is_available ? 'text-green-600' : 'text-red-600'}">
+                                            ${product.is_available ? 'Available' : 'Sold Out'}
+                                
