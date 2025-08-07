@@ -1240,7 +1240,7 @@ function renderCheckoutView() {
     const total = Math.max(0, subtotal - discount);
     
     mainContent.innerHTML = `
-        <div class="max-w-6xl mx-auto animate-fade-in">
+        <div class="max-w-7xl mx-auto animate-fade-in">
             <!-- Checkout Header -->
             <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                 <div class="flex items-center justify-between">
@@ -1256,65 +1256,75 @@ function renderCheckoutView() {
                 </div>
             </div>
             
+            <!-- Main Checkout Content -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Order Summary -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-semibold text-slate-800 mb-6">📋 Ringkasan Pesanan</h3>
-                    
-                    <div class="space-y-4 mb-6">
-                        ${cartItems.map(item => `
-                            <div class="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg">
-                                <img src="${item.image_url || 'https://placehold.co/80x80'}" 
-                                     alt="${item.name}" 
-                                     class="w-16 h-16 rounded-lg object-cover">
-                                <div class="flex-1">
-                                    <h4 class="font-semibold text-slate-800">${item.name}</h4>
-                                    <p class="text-sm text-slate-600">${formatCurrency(item.price)} x ${item.quantity}</p>
+                <!-- Left Column: Order Summary & Customer Info -->
+                <div class="space-y-6">
+                    <!-- Order Summary -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-slate-800 mb-6">📋 Ringkasan Pesanan</h3>
+                        
+                        <div class="space-y-4 mb-6">
+                            ${cartItems.map(item => `
+                                <div class="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg">
+                                    <img src="${item.image_url || 'https://placehold.co/80x80'}" 
+                                         alt="${item.name}" 
+                                         class="w-16 h-16 rounded-lg object-cover">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-slate-800">${item.name}</h4>
+                                        <p class="text-sm text-slate-600">${formatCurrency(item.price)} x ${item.quantity}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-semibold text-slate-800">${formatCurrency(item.price * item.quantity)}</p>
+                                    </div>
                                 </div>
-                                <div class="text-right">
-                                    <p class="font-semibold text-slate-800">${formatCurrency(item.price * item.quantity)}</p>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <!-- Order Totals -->
-                    <div class="border-t border-slate-200 pt-4 space-y-2">
-                        <div class="flex justify-between text-slate-600">
-                            <span>Subtotal (${cartItems.length} item${cartItems.length > 1 ? 's' : ''})</span>
-                            <span>${formatCurrency(subtotal)}</span>
+                            `).join('')}
                         </div>
-                        ${appState.appliedVoucher ? `
-                            <div class="flex justify-between text-green-600">
-                                <span>Diskon (${appState.appliedVoucher.code})</span>
-                                <span>-${formatCurrency(discount)}</span>
+                        
+                        <!-- Order Totals -->
+                        <div class="border-t border-slate-200 pt-4 space-y-2">
+                            <div class="flex justify-between text-slate-600">
+                                <span>Subtotal (${cartItems.length} item${cartItems.length > 1 ? 's' : ''})</span>
+                                <span>${formatCurrency(subtotal)}</span>
                             </div>
-                        ` : ''}
-                        <div class="border-t border-slate-200 pt-2 flex justify-between text-lg font-bold">
-                            <span>Total Pembayaran</span>
-                            <span class="text-slate-800">${formatCurrency(total)}</span>
+                            ${appState.appliedVoucher ? `
+                                <div class="flex justify-between text-green-600">
+                                    <span>Diskon (${appState.appliedVoucher.code})</span>
+                                    <span>-${formatCurrency(discount)}</span>
+                                </div>
+                            ` : ''}
+                            <div class="border-t border-slate-200 pt-2 flex justify-between text-lg font-bold">
+                                <span>Total Pembayaran</span>
+                                <span class="text-slate-800">${formatCurrency(total)}</span>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Customer Info Form -->
-<div class="mt-6 border-t border-slate-200 pt-6">
-    <h4 class="font-semibold text-slate-800 mb-4">👤 Informasi Pelanggan</h4>
-    <form id="customer-form" class="space-y-4">
-        <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">Nama Lengkap *</label>
-            <input type="text" id="customer-name" required
-                   class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
-        </div>
-    </form>
-</div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-4">👤 Informasi Pelanggan</h4>
+                        <form id="customer-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Nama Lengkap *</label>
+                                <input type="text" id="customer-name" required
+                                       class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 
-                <!-- Payment Section -->
+                <!-- Right Column: Payment Section -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <h3 class="text-xl font-semibold text-slate-800 mb-6">💳 Pembayaran</h3>
                     
                     <!-- Payment Instructions -->
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                        <h4 class="font-semibold text-blue-800 mb-2">📱 Cara Pembayaran QRIS</h4>
+                        <h4 class="font-semibold text-blue-800 mb-2 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            📱 Cara Pembayaran QRIS
+                        </h4>
                         <ol class="text-sm text-blue-700 space-y-1 list-decimal list-inside">
                             <li>Buka aplikasi pembayaran (GoPay, OVO, Dana, ShopeePay, dll)</li>
                             <li>Pilih menu <strong>Scan QR</strong> atau <strong>Bayar</strong></li>
@@ -1332,10 +1342,10 @@ function renderCheckoutView() {
                                 <img src="${appState.settings.qris_image_url}" 
                                      alt="QRIS Code" 
                                      class="w-64 h-64 mx-auto rounded-lg">
-                                <p class="text-sm text-slate-600 mt-2">Scan QR Code untuk pembayaran</p>
+                                <p class="text-sm text-slate-600 mt-3">Scan QR Code untuk pembayaran</p>
                             </div>
                         ` : `
-                            <div class="bg-slate-100 p-8 rounded-xl">
+                            <div class="bg-slate-100 p-12 rounded-xl">
                                 <div class="text-slate-400 text-center">
                                     <div class="text-6xl mb-4">📱</div>
                                     <h4 class="text-lg font-semibold mb-2">QRIS Belum Tersedia</h4>
@@ -1351,19 +1361,26 @@ function renderCheckoutView() {
                         <p class="text-2xl font-bold">${formatCurrency(total)}</p>
                     </div>
                     
-                    <!-- Confirmation Button -->
-                    ${appState.settings.qris_image_url ? `
-                        <button onclick="confirmPayment()" id="confirm-payment-btn"
-                                class="w-full bg-green-500 text-white py-4 rounded-lg hover:bg-green-600 transition-colors font-semibold text-lg mb-4">
-                            ✅ Sudah Bayar? Konfirmasi Pesanan
+                    <!-- Action Buttons -->
+                    <div class="space-y-3">
+                        ${appState.settings.qris_image_url ? `
+                            <button onclick="confirmPayment()" id="confirm-payment-btn"
+                                    class="w-full bg-green-500 text-white py-4 rounded-lg hover:bg-green-600 transition-colors font-semibold text-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                ✅ Sudah Bayar? Konfirmasi Pesanan
+                            </button>
+                        ` : ''}
+                        
+                        <button onclick="switchToHome()" 
+                                class="w-full bg-slate-200 text-slate-700 py-3 rounded-lg hover:bg-slate-300 transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            ← Kembali Berbelanja
                         </button>
-                    ` : ''}
-                    
-                    <!-- Cancel Button -->
-                    <button onclick="switchToHome()" 
-                            class="w-full bg-slate-200 text-slate-700 py-3 rounded-lg hover:bg-slate-300 transition-colors">
-                        ← Kembali Berbelanja
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
