@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TokoProfesional - Debug Mode</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CRITICAL: Supabase MUST be loaded BEFORE app.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    
+    <!-- Simple Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="container mx-auto p-4">
+            <h1 class="text-2xl font-bold text-slate-800">🛍️ TokoProfesional (Debug Mode)</h1>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-grow">
+        <!-- Content will be inserted here by JavaScript -->
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="text-center">
+                <div class="text-6xl mb-4">⏳</div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">Initializing...</h2>
+                <p class="text-slate-600">If this message doesn't change, check console (F12)</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t py-4">
+        <div class="container mx-auto text-center text-sm text-slate-500">
+            <p>Debug Mode - Check console for detailed logs</p>
+        </div>
+    </footer>
+
+    <!-- 
+    CRITICAL: app.js MUST be loaded AFTER Supabase 
+    Make sure app.js file is in the same directory as this HTML file
+    -->
+    <script src="app.js"></script>
+
+    <!-- Debug Script -->
+    <script>
+        // Additional debug info
+        console.log("🔍 HTML DEBUG INFO:");
+        console.log("- Supabase loaded:", typeof supabase !== 'undefined');
+        console.log("- Main content element:", document.getElementById('main-content') ? '✅' : '❌');
+        console.log("- Current URL:", window.location.href);
+        console.log("- User agent:", navigator.userAgent);
+        
+        // Check if app.js is loaded
+        setTimeout(() => {
+            if (typeof testDatabase === 'undefined') {
+                console.error("❌ app.js not loaded properly!");
+                document.getElementById('main-content').innerHTML = `
+                    <div class="flex flex-col items-center justify-center min-h-screen text-center p-4">
+                        <div class="text-red-500 text-6xl mb-4">❌</div>
+                        <h2 class="text-3xl font-bold text-red-600 mb-4">App.js Loading Error</h2>
+                        <p class="text-gray-600 mb-4">JavaScript file tidak berhasil dimuat</p>
+                        <div class="bg-red-50 p-4 rounded-lg text-left text-sm max-w-md">
+                            <p><strong>Kemungkinan masalah:</strong></p>
+                            <ul class="list-disc ml-4 mt-2">
+                                <li>File app.js tidak ada di folder yang sama</li>
+                                <li>Ada syntax error di app.js</li>
+                                <li>Server tidak bisa serve file .js</li>
+                            </ul>
+                        </div>
+                        <button onclick="location.reload()" class="mt-4 bg-blue-500 text-white px-6 py-3 rounded-lg">
+                            🔄 Reload Page
+                        </button>
+                    </div>
+                `;
+            } else {
+                console.log("✅ app.js loaded successfully!");
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
