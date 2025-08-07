@@ -3,83 +3,411 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TokoProfesional - Debug Mode</title>
+    <title>TokoProfesional - Modern E-Commerce</title>
+    <meta name="description" content="Destinasi fashion terpercaya untuk produk berkualitas tinggi dengan gaya modern dan profesional.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- CRITICAL: Supabase MUST be loaded BEFORE app.js -->
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'bounce-subtle': 'bounceSubtle 0.6s ease-in-out',
+                    },
+                    keyframes: {
+                        bounceSubtle: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .toast {
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .cart-bounce {
+            animation: bounceSubtle 0.6s ease-in-out;
+        }
+        
+        /* Loading animation */
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: all 0.2s ease;
+        }
+        
+        /* Hover effects */
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Focus styles */
+        .focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+    </style>
+    
+    <!-- Supabase Client - MUST be loaded before app.js -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-50 min-h-screen">
     
-    <!-- Simple Header -->
-    <header class="bg-white shadow-sm border-b">
-        <div class="container mx-auto p-4">
-            <h1 class="text-2xl font-bold text-slate-800">🛍️ TokoProfesional (Debug Mode)</h1>
+    <!-- Loading Overlay (shown initially) -->
+    <div id="loading-overlay" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-slate-800 mx-auto mb-4"></div>
+            <h2 class="text-xl font-semibold text-slate-800 mb-2">TokoProfesional</h2>
+            <p class="text-slate-600 loading-dots">Loading</p>
         </div>
-    </header>
+    </div>
 
-    <!-- Main Content Area -->
-    <main id="main-content" class="flex-grow">
-        <!-- Content will be inserted here by JavaScript -->
-        <div class="flex items-center justify-center min-h-screen">
-            <div class="text-center">
-                <div class="text-6xl mb-4">⏳</div>
-                <h2 class="text-2xl font-bold text-slate-800 mb-2">Initializing...</h2>
-                <p class="text-slate-600">If this message doesn't change, check console (F12)</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t py-4">
-        <div class="container mx-auto text-center text-sm text-slate-500">
-            <p>Debug Mode - Check console for detailed logs</p>
-        </div>
-    </footer>
-
-    <!-- 
-    CRITICAL: app.js MUST be loaded AFTER Supabase 
-    Make sure app.js file is in the same directory as this HTML file
-    -->
-    <script src="app.js"></script>
-
-    <!-- Debug Script -->
-    <script>
-        // Additional debug info
-        console.log("🔍 HTML DEBUG INFO:");
-        console.log("- Supabase loaded:", typeof supabase !== 'undefined');
-        console.log("- Main content element:", document.getElementById('main-content') ? '✅' : '❌');
-        console.log("- Current URL:", window.location.href);
-        console.log("- User agent:", navigator.userAgent);
+    <!-- Main Application -->
+    <div id="app" class="min-h-screen">
         
-        // Check if app.js is loaded
-        setTimeout(() => {
-            if (typeof testDatabase === 'undefined') {
-                console.error("❌ app.js not loaded properly!");
-                document.getElementById('main-content').innerHTML = `
-                    <div class="flex flex-col items-center justify-center min-h-screen text-center p-4">
-                        <div class="text-red-500 text-6xl mb-4">❌</div>
-                        <h2 class="text-3xl font-bold text-red-600 mb-4">App.js Loading Error</h2>
-                        <p class="text-gray-600 mb-4">JavaScript file tidak berhasil dimuat</p>
-                        <div class="bg-red-50 p-4 rounded-lg text-left text-sm max-w-md">
-                            <p><strong>Kemungkinan masalah:</strong></p>
-                            <ul class="list-disc ml-4 mt-2">
-                                <li>File app.js tidak ada di folder yang sama</li>
-                                <li>Ada syntax error di app.js</li>
-                                <li>Server tidak bisa serve file .js</li>
-                            </ul>
+        <!-- Navigation Header -->
+        <header class="bg-white shadow-sm border-b sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <div class="bg-slate-800 p-2 rounded-lg mr-3">
+                                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 class="text-xl font-bold text-slate-800">TokoProfesional</h1>
+                                <p class="text-xs text-slate-500">Fashion & Lifestyle</p>
+                            </div>
                         </div>
-                        <button onclick="location.reload()" class="mt-4 bg-blue-500 text-white px-6 py-3 rounded-lg">
-                            🔄 Reload Page
+                    </div>
+                    
+                    <nav class="hidden md:flex items-center space-x-6">
+                        <a href="#" onclick="switchToHome()" class="text-slate-600 hover:text-slate-900 font-medium">Home</a>
+                        <a href="#" class="text-slate-600 hover:text-slate-900 font-medium">About</a>
+                        <a href="#" class="text-slate-600 hover:text-slate-900 font-medium">Contact</a>
+                    </nav>
+                    
+                    <div class="flex items-center space-x-3">
+                        <button class="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                        <button class="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
                         </button>
                     </div>
-                `;
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="flex-grow">
+            <!-- Content will be injected here by JavaScript -->
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="text-center">
+                    <div class="text-6xl mb-4">⏳</div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Initializing...</h2>
+                    <p class="text-slate-600">Please wait while we load the application</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t py-8 mt-12">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Brand -->
+                    <div>
+                        <div class="flex items-center mb-4">
+                            <div class="bg-slate-800 p-2 rounded-lg mr-3">
+                                <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">TokoProfesional</h3>
+                                <p class="text-xs text-slate-500">Fashion & Lifestyle</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Destinasi fashion terpercaya untuk produk berkualitas tinggi dengan gaya modern dan profesional.
+                        </p>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-4">Quick Links</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#" onclick="switchToHome()" class="text-slate-600 hover:text-slate-900">Home</a></li>
+                            <li><a href="#" onclick="switchToAdmin()" class="text-slate-600 hover:text-slate-900">Admin Panel</a></li>
+                            <li><a href="#" class="text-slate-600 hover:text-slate-900">About Us</a></li>
+                            <li><a href="#" class="text-slate-600 hover:text-slate-900">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-4">Contact</h4>
+                        <div class="space-y-2 text-sm text-slate-600">
+                            <p>📧 kontak@tokoprofesional.com</p>
+                            <p>📞 (021) 123-4567</p>
+                            <p>📍 Jakarta, Indonesia</p>
+                        </div>
+                        
+                        <!-- Payment Methods -->
+                        <div class="mt-4">
+                            <p class="text-sm font-medium text-slate-700 mb-2">Payment Methods:</p>
+                            <div class="flex space-x-2">
+                                <div class="bg-slate-100 p-2 rounded text-xs font-medium">QRIS</div>
+                                <div class="bg-slate-100 p-2 rounded text-xs font-medium">GoPay</div>
+                                <div class="bg-slate-100 p-2 rounded text-xs font-medium">OVO</div>
+                                <div class="bg-slate-100 p-2 rounded text-xs font-medium">Dana</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Copyright -->
+                <div class="border-t border-slate-200 pt-6 mt-6 text-center text-sm text-slate-500">
+                    <p>&copy; 2024 TokoProfesional. All rights reserved. Made with ❤️ for better shopping experience.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2">
+        <!-- Toasts will be added here -->
+    </div>
+
+    <!-- Cart Sidebar (Hidden by default) -->
+    <div id="cart-sidebar" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-lg">
+            <div class="flex flex-col h-full">
+                <!-- Cart Header -->
+                <div class="flex items-center justify-between p-4 border-b">
+                    <h3 class="text-lg font-semibold">Shopping Cart</h3>
+                    <button onclick="closeCart()" class="text-slate-600 hover:text-slate-900">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Cart Items -->
+                <div id="cart-items" class="flex-1 overflow-y-auto p-4">
+                    <div class="text-center text-slate-500 py-8">
+                        <svg class="h-16 w-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        <p>Your cart is empty</p>
+                        <p class="text-sm">Add some products to get started</p>
+                    </div>
+                </div>
+                
+                <!-- Cart Footer -->
+                <div class="border-t p-4">
+                    <div class="space-y-4">
+                        <!-- Voucher Input -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Voucher Code</label>
+                            <div class="flex space-x-2">
+                                <input type="text" 
+                                       id="voucher-input" 
+                                       placeholder="Enter voucher code..."
+                                       class="flex-1 px-3 py-2 border border-slate-300 rounded-md text-sm focus-ring">
+                                <button onclick="applyVoucher()" 
+                                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 text-sm">
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Cart Total -->
+                        <div id="cart-total" class="space-y-2">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Checkout Button -->
+                        <button id="checkout-btn" 
+                                onclick="proceedToCheckout()"
+                                disabled
+                                class="w-full bg-slate-800 text-white py-3 rounded-lg font-medium hover:bg-slate-700 disabled:bg-slate-300 disabled:cursor-not-allowed">
+                            Proceed to Checkout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" 
+            class="hidden fixed bottom-4 right-4 bg-slate-800 text-white p-3 rounded-full shadow-lg hover:bg-slate-700 z-40">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
+    <!-- Additional JavaScript -->
+    <script>
+        // Hide loading overlay when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                const loadingOverlay = document.getElementById('loading-overlay');
+                if (loadingOverlay) {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 300);
+                }
+            }, 1500); // Show loading for 1.5 seconds minimum
+        });
+
+        // Back to top functionality
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.classList.remove('hidden');
             } else {
-                console.log("✅ app.js loaded successfully!");
+                backToTop.classList.add('hidden');
             }
-        }, 2000);
+        });
+
+        document.getElementById('back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Cart functionality placeholders
+        function openCart() {
+            document.getElementById('cart-sidebar').classList.remove('hidden');
+        }
+
+        function closeCart() {
+            document.getElementById('cart-sidebar').classList.add('hidden');
+        }
+
+        function applyVoucher() {
+            const voucherInput = document.getElementById('voucher-input');
+            const code = voucherInput.value.trim();
+            
+            if (code) {
+                // This will be implemented in the enhanced app.js
+                console.log('Applying voucher:', code);
+                // For now, just show a toast
+                if (window.showToast) {
+                    window.showToast('Voucher feature coming soon!', 'info');
+                }
+            }
+        }
+
+        function proceedToCheckout() {
+            // This will be implemented in the enhanced app.js
+            console.log('Proceeding to checkout...');
+            if (window.showToast) {
+                window.showToast('Checkout feature coming soon!', 'info');
+            }
+        }
+
+        // Global error handler
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+            
+            // Show user-friendly error message
+            if (window.showToast) {
+                window.showToast('Something went wrong. Please refresh the page.', 'error');
+            }
+        });
+
+        // Prevent forms from submitting if not handled
+        document.addEventListener('submit', function(event) {
+            // Only prevent if the form doesn't have a specific handler
+            if (!event.target.hasAttribute('data-handled')) {
+                event.preventDefault();
+                console.log('Form submission prevented for unhandled form');
+            }
+        });
+
+        // Add loading animation helper
+        function showPageLoading(show = true) {
+            const mainContent = document.getElementById('main-content');
+            if (!mainContent) return;
+            
+            if (show) {
+                mainContent.innerHTML = `
+                    <div class="flex items-center justify-center min-h-screen">
+                        <div class="text-center">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-800 mx-auto mb-4"></div>
+                            <p class="text-slate-600">Loading...</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Expose helpful functions globally
+        window.appHelpers = {
+            showPageLoading,
+            openCart,
+            closeCart,
+            applyVoucher,
+            proceedToCheckout
+        };
+
+        console.log('✅ Enhanced HTML loaded - Ready for enhanced app.js');
     </script>
+
+    <!-- Load Enhanced App.js -->
+    <script src="app.js"></script>
+
 </body>
 </html>
