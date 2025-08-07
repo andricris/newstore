@@ -1187,7 +1187,7 @@ function renderSettingsTab() {
                                 ${appState.settings.promo_media_type === 'video' ? `
                                     <video src="${appState.settings.promo_media_url}" 
                                            class="max-w-full h-auto max-h-64 mx-auto rounded-lg" 
-                                           controls>
+                                           controls muted>
                                         Browser Anda tidak mendukung video.
                                     </video>
                                 ` : `
@@ -2244,7 +2244,7 @@ function showPromoPopup() {
                 promoContainer.innerHTML = `
                     <video src="${appState.settings.promo_media_url}" 
                            class="w-full h-full object-cover rounded-lg" 
-                           controls autoplay muted>
+                           controls muted>
                         Browser Anda tidak mendukung video.
                     </video>
                 `;
