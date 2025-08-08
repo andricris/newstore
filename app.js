@@ -1,10 +1,10 @@
 // =====================================
-// TOKOPROFESIONAL - ENHANCED APP.JS
+// H3Store - ENHANCED APP.JS
 // Complete e-commerce with working checkout & admin features
 // Version: 3.1 - Fixed Auto Refresh & Removed Categories
 // =====================================
 
-console.log("🚀 ENHANCED TOKOPROFESIONAL - Starting...");
+console.log("🚀 ENHANCED H3Store - Starting...");
 
 // Global Application State
 let appState = {
@@ -17,7 +17,7 @@ let appState = {
         whatsappNumber: '',
         promo_media_url: '',
         promo_media_type: '',
-        store_name: 'TokoProfesional'
+        store_name: 'H3Store'
     },
     view: 'home',
     selectedProductId: null,
@@ -42,7 +42,7 @@ if (typeof supabase === 'undefined') {
 }
 
 async function initializeApp() {
-    console.log("🔧 Initializing TokoProfesional...");
+    console.log("🔧 Initializing H3Store...");
     
     try {
         // Initialize Supabase client
@@ -72,7 +72,7 @@ async function initializeApp() {
         // Show promo popup if available
         showPromoPopup();
         
-        console.log("🎉 TokoProfesional initialized successfully!");
+        console.log("🎉 H3Store initialized successfully!");
         
     } catch (error) {
         console.error("💥 Initialization failed:", error);
@@ -248,9 +248,9 @@ function updateFooter() {
     const settings = appState && appState.settings ? appState.settings : {};
     const { store_name, store_email, store_address } = settings;
     const nameEl = document.getElementById('footer-store-name');
-    if (nameEl) nameEl.textContent = store_name || 'TokoProfesional';
+    if (nameEl) nameEl.textContent = store_name || 'H3Store';
     const emailEl = document.getElementById('footer-email');
-    if (emailEl) emailEl.textContent = store_email || 'kontak@tokoprofesional.com';
+    if (emailEl) emailEl.textContent = store_email || 'kontak@H3Store.com';
     const phoneEl = document.getElementById('footer-phone');
     if (phoneEl && settings.store_phone) phoneEl.textContent = settings.store_phone;
     const addressEl = document.getElementById('footer-address');
@@ -258,7 +258,7 @@ function updateFooter() {
     const copyEl = document.getElementById('footer-copy');
     if (copyEl) {
         const year = new Date().getFullYear();
-        copyEl.textContent = `© ${year} ${store_name || 'TokoProfesional'}. Semua Hak Cipta Dilindungi Undang-Undang.`;
+        copyEl.textContent = `© ${year} ${store_name || 'H3Store'}. Semua Hak Cipta Dilindungi Undang-Undang.`;
     }
 }
 
@@ -553,7 +553,7 @@ function showLoadingState() {
     mainContent.innerHTML = `
         <div class="flex flex-col items-center justify-center min-h-[400px] animate-fade-in">
             <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-slate-800 mb-4"></div>
-            <h3 class="text-lg font-medium text-slate-800 mb-2">Memuat TokoProfesional</h3>
+            <h3 class="text-lg font-medium text-slate-800 mb-2">Memuat H3Store</h3>
             <p class="text-slate-600 text-center">Menyiapkan produk terbaik untuk Anda...</p>
         </div>
     `;
@@ -572,8 +572,8 @@ function renderHomeView() {
             <!-- Hero Section -->
             <div class="bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-xl p-8 mb-8">
                 <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Selamat Datang di TokoProfesional</h2>
-                    <p class="text-xl text-slate-300 mb-6">Destinasi fashion terpercaya untuk gaya hidup modern</p>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Selamat Datang di H3Store Premium</h2>
+                    <p class="text-xl text-slate-300 mb-6">Pusat akun premium terpercaya untuk kebutuhan digital Anda</p>
                     <div class="flex flex-wrap justify-center gap-4 text-sm">
                         <div class="bg-white/10 px-4 py-2 rounded-full">✅ Kualitas Premium</div>
                         <div class="bg-white/10 px-4 py-2 rounded-full">🚚 Pengiriman Cepat</div>
@@ -674,7 +674,7 @@ function renderLoginView() {
                         </svg>
                     </div>
                     <h2 class="text-2xl font-bold text-slate-800">Admin Login</h2>
-                    <p class="text-slate-600">Masuk ke panel admin TokoProfesional</p>
+                    <p class="text-slate-600">Masuk ke panel admin H3Store</p>
                 </div>
                 
                 <form id="login-form" class="space-y-6">
@@ -1166,7 +1166,7 @@ function renderSettingsTab() {
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-2">Nama Toko</label>
                         <input type="text" id="store-name" 
-                               value="${appState.settings.store_name || 'TokoProfesional'}"
+                               value="${appState.settings.store_name || 'H3Store'}"
                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500">
                     </div>
                     
@@ -1175,7 +1175,7 @@ function renderSettingsTab() {
                         <input type="email" id="store-email" 
                                value="${appState.settings.store_email || ''}"
                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500"
-                               placeholder="kontak@tokoprofesional.com">
+                               placeholder="kontak@H3Store.com">
                     </div>
                     
                     <div class="lg:col-span-2">
@@ -2046,7 +2046,7 @@ async function confirmPayment() {
         const total = Math.max(0, subtotal - discount);
         
         // Create WhatsApp message
-        let message = `Halo ${appState.settings.store_name || 'TokoProfesional'},\n\n`;
+        let message = `Halo ${appState.settings.store_name || 'H3Store'},\n\n`;
         message += `Saya ingin konfirmasi pembayaran untuk pesanan:\n\n`;
         message += `👤 *Detail Pelanggan:*\n`;
         message += `Nama: ${customerName}\n`;
@@ -2517,7 +2517,7 @@ window.saveStoreInfo = saveStoreInfo;
 window.savePromoMedia = savePromoMedia;
 window.deletePromoMedia = deletePromoMedia;
 
-console.log("✅ Enhanced TokoProfesional loaded successfully!");
+console.log("✅ Enhanced H3Store loaded successfully!");
 console.log("🎯 All features: Cart, Checkout, Admin Panel, Vouchers, Settings ready!");
 console.log("🔧 Fixed: Auto refresh issue and removed product categories display!");
 
