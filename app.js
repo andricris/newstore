@@ -220,7 +220,7 @@ function showToast(message, type = 'success') {
                 container.removeChild(toast);
             }
         }, 300);
-    }, 4000);
+    }, 1500);
 }
 
 function showError(message) {
