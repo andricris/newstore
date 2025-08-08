@@ -572,8 +572,8 @@ function renderHomeView() {
             <!-- Hero Section -->
             <div class="bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-xl p-8 mb-8">
                 <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Selamat Datang di TokoProfesional</h2>
-                    <p class="text-xl text-slate-300 mb-6">Destinasi fashion terpercaya untuk gaya hidup modern</p>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Selamat Datang di H3Store Premium</h2>
+                    <p class="text-xl text-slate-300 mb-6">Pusat akun premium terpercaya untuk kebutuhan digital Anda</p>
                     <div class="flex flex-wrap justify-center gap-4 text-sm">
                         <div class="bg-white/10 px-4 py-2 rounded-full">✅ Kualitas Premium</div>
                         <div class="bg-white/10 px-4 py-2 rounded-full">🚚 Pengiriman Cepat</div>
