@@ -212,7 +212,7 @@ function showToast(message, type = 'success') {
     // Trigger animation
     setTimeout(() => toast.classList.add('show'), 10);
     
-    // Remove after 4 seconds
+    // Remove after 1 seconds
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -220,7 +220,7 @@ function showToast(message, type = 'success') {
                 container.removeChild(toast);
             }
         }, 300);
-    }, 1500);
+    }, 1000);
 }
 
 function showError(message) {
