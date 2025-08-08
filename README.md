@@ -1,72 +1,99 @@
-# 🛍️ TokoProfesional - Modern E-Commerce Website
+🛍️ H3Store - Solusi kebutuhan akun premium digital
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/YOUR-SITE-ID/deploy-status)](https://app.netlify.com/sites/YOUR-SITE-NAME/deploys)
-[![Supabase](https://img.shields.io/badge/Database-Supabase-green)](https://supabase.com)
-[![Tailwind CSS](https://img.shields.io/badge/CSS-Tailwind-blue)](https://tailwindcss.com)
-[![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow)](https://javascript.info)
 
-> **Modern, responsive e-commerce website** yang dibangun dengan teknologi terdepan untuk memberikan pengalaman berbelanja online yang luar biasa.
 
-## 🌟 Demo Live
 
-- **Website**: [https://tokoprofesional.netlify.app](https://your-site.netlify.app)
-- **Admin Panel**: Klik tombol "Admin" → Login dengan akun Supabase Anda
-- **Fitur QRIS**: Pembayaran terintegrasi dengan sistem QRIS Indonesia
+Platform modern untuk menjual akun premium yang dibangun dengan teknologi terdepan untuk memberikan pengalaman pembelian layanan digital yang luar biasa.
 
-## ✨ Fitur Utama
+🌟 Demo Live
+Website: https://newh3store.netlify.app
 
-### 🛒 **Untuk Pelanggan**
-- **🖼️ Galeri Produk Dinamis** - Tampilan produk yang menarik dengan gambar berkualitas tinggi
-- **🔍 Pencarian Real-time** - Cari produk secara instant berdasarkan nama atau kategori  
-- **🔄 Sorting & Filtering** - Urutkan berdasarkan harga, popularitas, atau yang terbaru
-- **🛍️ Floating Cart** - Keranjang belanja yang mudah diakses dari mana saja
-- **🎟️ Sistem Voucher** - Dukungan kode diskon dengan berbagai jenis (persentase/nominal)
-- **📱 Responsive Design** - Tampilan optimal di desktop, tablet, dan mobile
-- **⚡ Loading Cepat** - Optimasi performa dengan lazy loading dan caching
-- **♿ Accessibility** - Dukungan penuh untuk screen readers dan keyboard navigation
+Admin Panel: Klik tombol "Admin" → Login dengan akun Supabase Anda
 
-### 🔧 **Untuk Admin**
-- **🔐 Panel Admin Aman** - Sistem login terintegrasi dengan Supabase Auth
-- **📊 Dashboard Analytics** - Statistik penjualan dan performa produk
-- **📦 Manajemen Produk CRUD** - Tambah, edit, hapus produk dengan mudah
-- **📸 Upload Gambar** - Sistem upload terintegrasi dengan Supabase Storage
-- **🏪 Pengaturan Toko Lengkap**:
-  - Upload gambar QRIS untuk pembayaran
-  - Atur nomor WhatsApp untuk konfirmasi pesanan  
-  - Upload media promosi (gambar/video) untuk popup
-  - Konfigurasi informasi toko
-- **🎫 Manajemen Voucher** - Buat, aktifkan/nonaktifkan kode voucher
-- **📊 Realtime Updates** - Perubahan data langsung tersinkronisasi
+Fitur QRIS: Pembayaran terintegrasi dengan sistem QRIS Indonesia
 
-### 💳 **Sistem Pembayaran**
-- **📱 QRIS Payment** - Pembayaran menggunakan QRIS (GoPay, OVO, Dana, dll)
-- **💬 WhatsApp Integration** - Konfirmasi otomatis melalui WhatsApp
-- **🧾 Order Tracking** - Sistem pelacakan pesanan yang komprehensif
+✨ Fitur Utama
+🛒 Untuk Pelanggan
+🖼️ Galeri Produk Dinamis - Tampilan produk yang menarik dengan gambar berkualitas tinggi
 
-## 🚀 Teknologi yang Digunakan
+🔍 Pencarian Real-time - Cari produk secara instant berdasarkan nama atau kategori
 
-### **Frontend**
-- **HTML5** - Struktur semantic yang modern
-- **Tailwind CSS** - Utility-first CSS framework untuk styling cepat
-- **Vanilla JavaScript (ES6+)** - Logic aplikasi tanpa framework yang berat
-- **Web APIs** - Memanfaatkan browser APIs untuk performa optimal
+🔄 Sorting & Filtering - Urutkan berdasarkan harga, popularitas, atau yang terbaru
 
-### **Backend & Database**
-- **Supabase** - Backend-as-a-Service yang powerful
-  - **PostgreSQL Database** - Database relational yang robust
-  - **Supabase Auth** - Sistem autentikasi yang aman
-  - **Supabase Storage** - Penyimpanan file yang scalable
-  - **Realtime Subscriptions** - Update data secara real-time
-  - **Row Level Security** - Keamanan data tingkat row
+🛍️ Floating Cart - Keranjang belanja yang mudah diakses dari mana saja
 
-### **Deployment & DevOps**
-- **Netlify** - Hosting static website dengan CI/CD
-- **GitHub** - Version control dan collaboration
-- **CDN** - Content delivery untuk performa global
+🎟️ Sistem Voucher - Dukungan kode diskon dengan berbagai jenis (persentase/nominal)
 
-## 📁 Struktur Project
+📱 Responsive Design - Tampilan optimal di desktop, tablet, dan mobile
 
-```
+⚡ Loading Cepat - Optimasi performa dengan lazy loading dan caching
+
+♿ Accessibility - Dukungan penuh untuk screen readers dan keyboard navigation
+
+🔧 Untuk Admin
+🔐 Panel Admin Aman - Sistem login terintegrasi dengan Supabase Auth
+
+📊 Dashboard Analytics - Statistik penjualan dan performa produk
+
+📦 Manajemen Produk CRUD - Tambah, edit, hapus produk dengan mudah
+
+📸 Upload Gambar - Sistem upload terintegrasi dengan Supabase Storage
+
+🏪 Pengaturan Toko Lengkap:
+
+Upload gambar QRIS untuk pembayaran
+
+Atur nomor WhatsApp untuk konfirmasi pesanan
+
+Upload media promosi (gambar/video) untuk popup
+
+Konfigurasi informasi toko (nama, email, alamat, nomor telepon) yang otomatis ditampilkan di footer dan hero halaman utama
+
+🎫 Manajemen Voucher - Buat, aktifkan/nonaktifkan kode voucher
+
+📊 Realtime Updates - Perubahan data langsung tersinkronisasi
+
+💳 Sistem Pembayaran
+📱 QRIS Payment - Pembayaran menggunakan QRIS (GoPay, OVO, Dana, dll)
+
+💬 WhatsApp Integration - Konfirmasi otomatis melalui WhatsApp
+
+🧾 Order Tracking - Sistem pelacakan pesanan yang komprehensif
+
+🚀 Teknologi yang Digunakan
+Frontend
+HTML5 - Struktur semantic yang modern
+
+Tailwind CSS - Utility-first CSS framework untuk styling cepat
+
+Vanilla JavaScript (ES6+) - Logic aplikasi tanpa framework yang berat
+
+Web APIs - Memanfaatkan browser APIs untuk performa optimal
+
+Backend & Database
+Supabase - Backend-as-a-Service yang powerful
+
+PostgreSQL Database - Database relational yang robust
+
+Supabase Auth - Sistem autentikasi yang aman
+
+Supabase Storage - Penyimpanan file yang scalable
+
+Realtime Subscriptions - Update data secara real-time
+
+Row Level Security - Keamanan data tingkat row
+
+Deployment & DevOps
+Netlify - Hosting static website dengan CI/CD
+
+GitHub - Version control dan collaboration
+
+CDN - Content delivery untuk performa global
+
+📁 Struktur Project
+bash
+Salin
+Edit
 tokoprofesional/
 ├── 📄 index.html              # Halaman utama dengan struktur HTML
 ├── 🎨 style.css              # Custom styles dan animations
@@ -75,297 +102,427 @@ tokoprofesional/
 ├── 📚 README.md              # Dokumentasi project (file ini)
 ├── 📋 .gitignore             # File yang diabaikan Git
 └── 📝 netlify.toml           # Konfigurasi deployment Netlify
-```
+🛠️ Panduan Setup & Instalasi
+Prerequisites
+Akun Supabase (gratis)
 
-## 🛠️ Panduan Setup & Instalasi
+Akun GitHub (gratis)
 
-### **Prerequisites**
-- Akun [Supabase](https://supabase.com) (gratis)
-- Akun [GitHub](https://github.com) (gratis)  
-- Akun [Netlify](https://netlify.com) (gratis)
-- Browser modern (Chrome, Firefox, Safari, Edge)
+Akun Netlify (gratis)
 
-### **1. Setup Supabase Database**
+Browser modern (Chrome, Firefox, Safari, Edge)
 
-#### a) Buat Project Supabase
-1. Buka [Supabase](https://supabase.com) dan login/register
-2. Klik **"New Project"**
-3. Isi detail project:
-   - **Name**: `tokoprofesional`
-   - **Database Password**: Buat password yang kuat
-   - **Region**: Pilih yang terdekat (Singapore untuk Indonesia)
-4. Tunggu project selesai dibuat (~2 menit)
+1. Setup Supabase Database
+a) Buat Project Supabase
+Buka Supabase dan login/register
 
-#### b) Setup Database Schema
-1. Buka project Supabase Anda
-2. Pergi ke **SQL Editor** di sidebar
-3. Copy seluruh isi file `database_setup.sql`
-4. Paste di SQL Editor dan klik **"RUN"**
-5. Tunggu hingga selesai - Anda akan melihat pesan "✅ All tables created successfully!"
+Klik "New Project"
 
-#### c) Dapatkan API Keys
-1. Pergi ke **Settings** → **API**
-2. Copy nilai berikut:
-   - **Project URL** (contoh: `https://xxx.supabase.co`)
-   - **Project API Keys** → **anon public** (contoh: `eyJhbG...`)
+Isi detail project:
 
-#### d) Buat User Admin
-1. Pergi ke **Authentication** → **Users**
-2. Klik **"Add user"** → **"Create new user"**
-3. Isi email dan password yang akan Anda gunakan untuk login admin
-4. Klik **"Create user"**
+Name: tokoprofesional
 
-### **2. Konfigurasi Code**
+Database Password: Buat password yang kuat
 
-#### a) Clone/Download Repository
-```bash
+Region: Pilih yang terdekat (Singapore untuk Indonesia)
+
+Tunggu project selesai dibuat (~2 menit)
+
+b) Setup Database Schema
+Buka project Supabase Anda
+
+Pergi ke SQL Editor di sidebar
+
+Copy seluruh isi file database_setup.sql
+
+Paste di SQL Editor dan klik "RUN"
+
+Tunggu hingga selesai - Anda akan melihat pesan "✅ All tables created successfully!"
+
+c) Dapatkan API Keys
+Pergi ke Settings → API
+
+Copy nilai berikut:
+
+Project URL (contoh: https://xxx.supabase.co)
+
+Project API Keys → anon public (contoh: eyJhbG...)
+
+d) Buat User Admin
+Pergi ke Authentication → Users
+
+Klik "Add user" → "Create new user"
+
+Isi email dan password yang akan Anda gunakan untuk login admin
+
+Klik "Create user"
+
+2. Konfigurasi Code
+a) Clone/Download Repository
+bash
+Salin
+Edit
 # Clone repository
 git clone https://github.com/username/tokoprofesional.git
 cd tokoprofesional
 
 # Atau download ZIP dan extract
-```
+b) Update Konfigurasi Supabase
+Buka file app.js
 
-#### b) Update Konfigurasi Supabase
-1. Buka file `app.js`
-2. Cari baris berikut di bagian atas:
-```javascript
+Cari baris berikut di bagian atas:
+
+javascript
+Salin
+Edit
 const supabaseUrl = 'https://viresxwhyqcflmfoyxsf.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
-```
-3. Ganti dengan URL dan API Key Supabase Anda:
-```javascript
+Ganti dengan URL dan API Key Supabase Anda:
+
+javascript
+Salin
+Edit
 const supabaseUrl = 'https://YOUR-PROJECT-ID.supabase.co';
 const supabaseAnonKey = 'YOUR-ANON-KEY';
-```
+3. Deploy ke Netlify
+a) Deploy dari GitHub (Recommended)
+Push code ke GitHub repository
 
-### **3. Deploy ke Netlify**
+Login ke Netlify
 
-#### a) Deploy dari GitHub (Recommended)
-1. Push code ke GitHub repository
-2. Login ke [Netlify](https://netlify.com)
-3. Klik **"Add new site"** → **"Import from Git"**
-4. Pilih GitHub dan repository Anda
-5. Konfigurasi build:
-   - **Build command**: (kosongkan)
-   - **Publish directory**: (kosongkan atau isi dengan `/`)
-6. Klik **"Deploy site"**
-7. Tunggu deployment selesai (~1-2 menit)
+Klik "Add new site" → "Import from Git"
 
-#### b) Deploy Manual (Drag & Drop)
-1. Login ke [Netlify](https://netlify.com)
-2. Drag & drop folder project ke area deploy
-3. Tunggu upload selesai
+Pilih GitHub dan repository Anda
 
-#### c) Konfigurasi Domain (Opsional)
-1. Di dashboard Netlify, klik **"Domain settings"**
-2. Klik **"Options"** → **"Edit site name"**
-3. Ganti dengan nama yang diinginkan (contoh: `tokoprofesional-anda`)
+Konfigurasi build:
 
-### **4. Konfigurasi Supabase untuk Production**
+Build command: (kosongkan)
 
-#### a) Update Site URL
-1. Kembali ke dashboard Supabase
-2. Pergi ke **Authentication** → **URL Configuration**
-3. Tambahkan URL Netlify Anda di **Site URL**:
-   ```
-   https://your-site-name.netlify.app
-   ```
-4. Tambahkan juga di **Redirect URLs**
+Publish directory: (kosongkan atau isi dengan /)
 
-#### b) Verifikasi Storage
-1. Pergi ke **Storage** di Supabase
-2. Pastikan bucket `images` sudah ada dengan status **Public**
-3. Jika belum ada, jalankan ulang script `database_setup.sql`
+Klik "Deploy site"
 
-## 🎯 Cara Penggunaan
+Tunggu deployment selesai (~1-2 menit)
 
-### **Untuk Admin**
+b) Deploy Manual (Drag & Drop)
+Login ke Netlify
 
-#### 1. Login ke Admin Panel
-1. Buka website Anda
-2. Klik tombol **"Admin"** di header
-3. Login dengan email dan password yang dibuat di Supabase
+Drag & drop folder project ke area deploy
 
-#### 2. Mengelola Produk
-- **Tambah Produk**: Klik "Tambah Produk" → Isi form → Upload gambar → Simpan
-- **Edit Produk**: Klik "Edit" di tabel produk → Ubah data → Simpan
-- **Hapus Produk**: Klik "Hapus" di tabel produk
-- **Toggle Stok**: Gunakan switch di kolom "Stok" untuk menandai produk habis
+Tunggu upload selesai
 
-#### 3. Pengaturan Toko
-- **Upload QRIS**: Upload gambar QR Code untuk pembayaran
-- **WhatsApp**: Masukkan nomor dengan format 62xxx (tanpa +)
-- **Media Promosi**: Upload gambar/video untuk popup promosi
+c) Konfigurasi Domain (Opsional)
+Di dashboard Netlify, klik "Domain settings"
 
-#### 4. Mengelola Voucher
-- **Buat Voucher**: Isi kode dan nominal diskon → Simpan
-- **Aktifkan/Nonaktifkan**: Gunakan switch di daftar voucher
-- **Hapus Voucher**: Klik tombol ✕ merah
+Klik "Options" → "Edit site name"
 
-### **Untuk Pelanggan**
+Ganti dengan nama yang diinginkan (contoh: tokoprofesional-anda)
 
-#### 1. Berbelanja
-1. Browse produk di halaman utama
-2. Gunakan search box untuk mencari produk spesifik
-3. Klik produk untuk melihat detail lengkap
-4. Klik "Beli" atau "Tambah ke Keranjang"
+4. Konfigurasi Supabase untuk Production
+a) Update Site URL
+Kembali ke dashboard Supabase
 
-#### 2. Checkout
-1. Klik ikon keranjang di header
-2. Review items di keranjang
-3. Masukkan kode voucher (jika ada)
-4. Klik "Lanjut ke Pembayaran"
-5. Scan QR Code dengan aplikasi e-wallet
-6. Klik "Sudah bayar? Klik di sini" untuk konfirmasi via WhatsApp
+Pergi ke Authentication → URL Configuration
 
-## 🔧 Kustomisasi
+Tambahkan URL Netlify Anda di Site URL:
 
-### **Mengubah Tema Warna**
-Edit file `style.css` dan ubah custom properties di bagian `:root`:
-```css
+arduino
+Salin
+Edit
+https://your-site-name.netlify.app
+Tambahkan juga di Redirect URLs
+
+b) Verifikasi Storage
+Pergi ke Storage di Supabase
+
+Pastikan bucket images sudah ada dengan status Public
+
+Jika belum ada, jalankan ulang script database_setup.sql
+
+🎯 Cara Penggunaan
+Untuk Admin
+1. Login ke Admin Panel
+Buka website Anda
+
+Klik tombol "Admin" di header
+
+Login dengan email dan password yang dibuat di Supabase
+
+2. Mengelola Produk
+Tambah Produk: Klik "Tambah Produk" → Isi form → Upload gambar → Simpan
+
+Edit Produk: Klik "Edit" di tabel produk → Ubah data → Simpan
+
+Hapus Produk: Klik "Hapus" di tabel produk
+
+Toggle Stok: Gunakan switch di kolom "Stok" untuk menandai produk habis
+
+3. Pengaturan Toko
+Upload QRIS: Upload gambar QR Code untuk pembayaran
+
+WhatsApp: Masukkan nomor dengan format 62xxx (tanpa +)
+
+Media Promosi: Upload gambar/video untuk popup promosi
+
+4. Mengelola Voucher
+Buat Voucher: Isi kode dan nominal diskon → Simpan
+
+Aktifkan/Nonaktifkan: Gunakan switch di daftar voucher
+
+Hapus Voucher: Klik tombol ✕ merah
+
+Untuk Pelanggan
+1. Berbelanja
+Browse produk di halaman utama
+
+Gunakan search box untuk mencari produk spesifik
+
+Klik produk untuk melihat detail lengkap
+
+Klik "Beli" atau "Tambah ke Keranjang"
+
+2. Checkout
+Klik ikon keranjang di header
+
+Review items di keranjang
+
+Masukkan kode voucher (jika ada)
+
+Klik "Lanjut ke Pembayaran"
+
+Scan QR Code dengan aplikasi e-wallet
+
+Klik "Sudah bayar? Klik di sini" untuk konfirmasi via WhatsApp
+
+🔧 Kustomisasi
+Mengubah Tema Warna
+Edit file style.css dan ubah custom properties di bagian :root:
+
+css
+Salin
+Edit
 :root {
   --primary-color: #3b82f6;
   --secondary-color: #1e293b;
   --accent-color: #10b981;
 }
-```
+Mengubah Font
+Edit file style.css di bagian body:
 
-### **Mengubah Font**
-Edit file `style.css` di bagian `body`:
-```css
+css
+Salin
+Edit
 body {
   font-family: 'Poppins', 'Inter', sans-serif;
 }
-```
+Menambah Kategori Produk
+Update file database_setup.sql dan tambahkan kategori di sample data:
 
-### **Menambah Kategori Produk**
-Update file `database_setup.sql` dan tambahkan kategori di sample data:
-```sql
+sql
+Salin
+Edit
 INSERT INTO products (..., category, ...)
 VALUES (..., 'new-category', ...);
-```
+Kustomisasi Pesan WhatsApp
+Edit template di tabel settings:
 
-### **Kustomisasi Pesan WhatsApp**
-Edit template di tabel `settings`:
-```sql
+sql
+Salin
+Edit
 UPDATE settings 
 SET whatsapp_message_template = 'Template pesan Anda: %ORDER_DETAILS%'
 WHERE id = 1;
-```
+Mengubah Teks Hero & Footer
+Nama toko dan detail kontak yang Anda atur melalui menu Pengaturan Toko akan digunakan secara otomatis pada halaman utama. Aplikasi memanfaatkan fungsi updateFooter() di app.js untuk menulis nilai store_name, store_email, store_address, dan store_phone ke elemen footer dengan id footer-store-name, footer-email, footer-address, footer-phone, dan footer-copy yang ada di index.html. Pastikan elemen-elemen ini ada di HTML Anda agar data tampil secara dinamis.
 
-## 📊 Fitur Analytics (Coming Soon)
+Untuk menampilkan nama toko secara dinamis pada hero section, ganti string statis “Selamat Datang di TokoProfesional” di fungsi renderHomeView() dengan ekspresi template berikut:
 
-- Dashboard penjualan dengan grafik
-- Laporan produk terlaris
-- Analytics traffic website
-- Export data ke Excel/CSV
+javascript
+Salin
+Edit
+<h2 class="text-3xl md:text-4xl font-bold mb-4">
+  Selamat Datang di ${appState.settings.store_name || 'TokoProfesional'}
+</h2>
+Dengan modifikasi ini, judul hero otomatis menggunakan nama toko yang tersimpan di Supabase. Jika nilai belum diatur, fallback ke “TokoProfesional”.
 
-## 🔐 Keamanan
+Mengatur Durasi Toast / Notifikasi
+Toast (notifikasi) ditampilkan melalui fungsi showToast() di app.js. Secara default, toast akan hilang setelah 4000 ms (4 detik). Anda dapat menyesuaikan durasi ini dengan menambahkan parameter opsional, misalnya:
 
-### **Implementasi Keamanan**
-- ✅ **Row Level Security (RLS)** - Data protection di level database
-- ✅ **Input Sanitization** - Validasi semua input user
-- ✅ **SQL Injection Prevention** - Menggunakan prepared statements
-- ✅ **XSS Protection** - Escape HTML output
-- ✅ **CSRF Protection** - Token validation untuk actions
-- ✅ **Secure File Upload** - Validasi file type dan size
-- ✅ **Authentication** - Session-based auth dengan JWT
+javascript
+Salin
+Edit
+function showToast(message, type = 'success', duration = 2000) {
+  const toast = document.createElement('div');
+  // … atur konten dan animasi toast …
+  setTimeout(() => {
+    // hilangkan dan hapus toast
+  }, duration);
+}
+Ketika dipanggil dengan showToast('Produk ditambahkan!', 'success', 1500), toast akan hilang setelah 1,5 detik. Jika parameter duration tidak diberikan, durasi default dapat ditetapkan di dalam fungsi.
 
-### **Best Practices**
-- Selalu gunakan HTTPS di production
-- Backup database secara berkala
-- Monitor logs untuk aktivitas mencurigakan  
-- Update dependencies secara rutin
-- Gunakan environment variables untuk API keys
+📊 Fitur Analytics (Coming Soon)
+Dashboard penjualan dengan grafik
 
-## 🐛 Troubleshooting
+Laporan produk terlaris
 
-### **Website Tidak Load**
-1. **Cek Console Browser** (F12 → Console)
-   - Error koneksi Supabase → Periksa URL dan API key
-   - CORS error → Update Site URL di Supabase
-2. **Cek Network Tab** (F12 → Network)
-   - Request gagal → Periksa endpoint dan authentication
+Analytics traffic website
 
-### **Database Error**
-1. **Jalankan ulang `database_setup.sql`**
-2. **Periksa RLS policies** di Supabase → Authentication → Policies
-3. **Cek Storage bucket** di Supabase → Storage
+Export data ke Excel/CSV
 
-### **Upload File Gagal**
-1. **Periksa Storage policies** di Supabase
-2. **Cek file size** (maksimal 10MB)
-3. **Verifikasi file type** (jpg, png, webp, mp4)
+🔐 Keamanan
+Implementasi Keamanan
+✅ Row Level Security (RLS) - Data protection di level database
 
-### **Login Admin Gagal**
-1. **Periksa user di Supabase** → Authentication → Users
-2. **Cek email confirmation** status
-3. **Reset password** jika perlu
+✅ Input Sanitization - Validasi semua input user
 
-## 🚀 Performance Optimization
+✅ SQL Injection Prevention - Menggunakan prepared statements
 
-### **Yang Sudah Diimplementasi**
-- ✅ Lazy loading images
-- ✅ CSS minification via Tailwind
-- ✅ JavaScript ES6+ modern syntax
-- ✅ CDN untuk static assets
-- ✅ Gzip compression (Netlify)
-- ✅ Browser caching
-- ✅ Optimized images dengan WebP
+✅ XSS Protection - Escape HTML output
 
-### **Rekomendasi Tambahan**
-- Implementasi Service Worker untuk offline support
-- Image optimization dengan next-gen formats
-- Code splitting untuk JavaScript
-- Database query optimization
-- Redis caching untuk data yang sering diakses
+✅ CSRF Protection - Token validation untuk actions
 
-## 🤝 Contributing
+✅ Secure File Upload - Validasi file type dan size
 
+✅ Authentication - Session-based auth dengan JWT
+
+Best Practices
+Selalu gunakan HTTPS di production
+
+Backup database secara berkala
+
+Monitor logs untuk aktivitas mencurigakan
+
+Update dependencies secara rutin
+
+Gunakan environment variables untuk API keys
+
+🐛 Troubleshooting
+Website Tidak Load
+Cek Console Browser (F12 → Console)
+
+Error koneksi Supabase → Periksa URL dan API key
+
+CORS error → Update Site URL di Supabase
+
+Cek Network Tab (F12 → Network)
+
+Request gagal → Periksa endpoint dan authentication
+
+Database Error
+Jalankan ulang database_setup.sql
+
+Periksa RLS policies di Supabase → Authentication → Policies
+
+Cek Storage bucket di Supabase → Storage
+
+Upload File Gagal
+Periksa Storage policies di Supabase
+
+Cek file size (maksimal 10MB)
+
+Verifikasi file type (jpg, png, webp, mp4)
+
+Login Admin Gagal
+Periksa user di Supabase → Authentication → Users
+
+Cek email confirmation status
+
+Reset password jika perlu
+
+🚀 Performance Optimization
+Yang Sudah Diimplementasi
+✅ Lazy loading images
+
+✅ CSS minification via Tailwind
+
+✅ JavaScript ES6+ modern syntax
+
+✅ CDN untuk static assets
+
+✅ Gzip compression (Netlify)
+
+✅ Browser caching
+
+✅ Optimized images dengan WebP
+
+Rekomendasi Tambahan
+Implementasi Service Worker untuk offline support
+
+Image optimization dengan next-gen formats
+
+Code splitting untuk JavaScript
+
+Database query optimization
+
+Redis caching untuk data yang sering diakses
+
+🤝 Contributing
 Kami menerima kontribusi! Silakan:
 
-1. **Fork repository** ini
-2. **Buat feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit changes** (`git commit -m 'Add some AmazingFeature'`)
-4. **Push branch** (`git push origin feature/AmazingFeature`) 
-5. **Buat Pull Request**
+Fork repository ini
 
-### **Development Guidelines**
-- Gunakan conventional commits
-- Tulis kode yang readable dan documented
-- Test semua fitur sebelum PR
-- Update README jika menambah fitur
+Buat feature branch (git checkout -b feature/AmazingFeature)
 
-## 📝 Changelog
+Commit changes (git commit -m 'Add some AmazingFeature')
 
-### **v2.0.0** (Latest)
-- ✨ Complete database schema dengan orders tracking
-- 🎨 Enhanced UI dengan modern design
-- 🔧 Improved error handling dan debugging
-- 📱 Better mobile responsiveness
-- ♿ Enhanced accessibility features
-- 🚀 Performance optimizations
+Push branch (git push origin feature/AmazingFeature)
 
-### **v1.0.0**
-- 🎉 Initial release
-- ✅ Basic CRUD operations
-- 💳 QRIS payment integration
-- 🛒 Shopping cart functionality
+Buat Pull Request
 
-## 📞 Support
+Development Guidelines
+Gunakan conventional commits
 
+Tulis kode yang readable dan documented
+
+Test semua fitur sebelum PR
+
+Update README jika menambah fitur
+
+📥 Download Berkas Pembaruan
+Untuk mempermudah akses terhadap versi terbaru dari file HTML dan JavaScript yang telah diperbarui, berikut tautan unduhnya (file‑file ini terdapat di repositori Anda):
+
+index_updated.html: index_updated.html
+
+app_updated.js: app_updated.js
+
+📝 Changelog
+v2.0.0 (Latest)
+✨ Complete database schema dengan orders tracking
+
+🎨 Enhanced UI dengan modern design
+
+🔧 Improved error handling dan debugging
+
+📱 Better mobile responsiveness
+
+♿ Enhanced accessibility features
+
+🚀 Performance optimizations
+
+v1.0.0
+🎉 Initial release
+
+✅ Basic CRUD operations
+
+💳 QRIS payment integration
+
+🛒 Shopping cart functionality
+
+📞 Support
 Butuh bantuan? Hubungi kami melalui:
 
-- **Email**: [support@tokoprofesional.com](mailto:support@tokoprofesional.com)
-- **GitHub Issues**: [Create Issue](https://github.com/username/tokoprofesional/issues)
-- **Documentation**: [Wiki](https://github.com/username/tokoprofesional/wiki)
+Email: support@tokoprofesional.com
 
-## 📄 License
+GitHub Issues: Create Issue
 
-Project ini menggunakan **MIT License**. Lihat file [LICENSE](LICENSE) untuk detail lengkap.
+Documentation: Wiki
 
-```
+📄 License
+Project ini menggunakan MIT License. Lihat file LICENSE untuk detail lengkap.
+
+sql
+Salin
+Edit
 MIT License
 
 Copyright (c) 2024 TokoProfesional
@@ -387,24 +544,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-```
-
-## 🌟 Credits
-
+🌟 Credits
 Dibuat dengan ❤️ menggunakan:
-- [Supabase](https://supabase.com) - The Open Source Firebase Alternative
-- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
-- [Netlify](https://netlify.com) - Deploy modern static websites
-- [Heroicons](https://heroicons.com) - Beautiful hand-crafted SVG icons
 
----
+Supabase - The Open Source Firebase Alternative
+
+Tailwind CSS - Utility-first CSS framework
+
+Netlify - Deploy modern static websites
+
+Heroicons - Beautiful hand-crafted SVG icons
 
 <div align="center">
+⭐ Jika project ini bermanfaat, berikan star di GitHub!
 
-**⭐ Jika project ini bermanfaat, berikan star di GitHub!**
+🔗 Live Demo • 📚 Documentation • 🐛 Report Bug
 
-[🔗 Live Demo](https://your-site.netlify.app) • [📚 Documentation](https://github.com/username/tokoprofesional/wiki) • [🐛 Report Bug](https://github.com/username/tokoprofesional/issues)
-
-**Made with ❤️ for Indonesian E-Commerce**
+Made with ❤️ for Indonesian E-Commerce
 
 </div>
